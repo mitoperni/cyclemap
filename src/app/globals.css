@@ -1,0 +1,38 @@
+@import 'tailwindcss';
+
+@theme inline {
+  /* ============================================
+     TOREA BAY - Primary Blues
+     Usage: bg-torea-bay-500, text-torea-bay-950, etc.
+     ============================================ */
+  --color-torea-bay-50: #eff4fe;
+  --color-torea-bay-100: #e2eafd;
+  --color-torea-bay-200: #cad7fb;
+  --color-torea-bay-300: #abbdf6;
+  --color-torea-bay-400: #8998f0;
+  --color-torea-bay-500: #6c77e8;
+  --color-torea-bay-600: #5050db;
+  --color-torea-bay-700: #4341c1;
+  --color-torea-bay-800: #363698;
+  --color-torea-bay-900: #33347c;
+  --color-torea-bay-950: #1e1e48;
+
+  /* ============================================
+     GRENADIER - Accent Oranges
+     Usage: bg-grenadier-500, text-grenadier-600, etc.
+     ============================================ */
+  --color-grenadier-50: #fef5ee;
+  --color-grenadier-100: #fde8d7;
+  --color-grenadier-200: #faccae;
+  --color-grenadier-300: #f7a97a;
+  --color-grenadier-400: #f37b44;
+  --color-grenadier-500: #f0581f;
+  --color-grenadier-600: #de3e15;
+  --color-grenadier-700: #ba2d14;
+  --color-grenadier-800: #942618;
+  --color-grenadier-900: #782116;
+  --color-grenadier-950: #410f09;
+
+  /* Layout */
+  --sidebar-width: 551px;
+}
