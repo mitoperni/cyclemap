@@ -12,7 +12,10 @@ export const NetworkSchema = z.object({
   name: z.string(),
   href: z.string(),
   location: LocationSchema,
-  company: z.array(z.string()).nullable().transform((val) => val ?? []),
+  company: z
+    .array(z.string())
+    .nullable()
+    .transform((val) => val ?? []),
   gbfs_href: z.string().optional(),
 });
 
