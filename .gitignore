@@ -5,6 +5,7 @@
 # Except these
 !.gitignore
 !.prettierrc
+!.github
 
 # dependencies
 /node_modules
