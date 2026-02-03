@@ -6,9 +6,9 @@ interface SidebarProps {
 
 export function Sidebar({ children }: SidebarProps) {
   return (
-    <aside className="flex h-full w-full flex-col bg-white lg:w-(--sidebar-width) px-[40px] pt-[40px]">
+    <aside className="flex h-full w-full flex-col bg-white px-[40px] pt-[40px] lg:w-(--sidebar-width)">
       <Header />
-      <div className="flex-1 overflow-y-auto">{children}</div>
+      <div className="scrollbar-hidden flex-1 overflow-y-auto">{children}</div>
     </aside>
   );
 }

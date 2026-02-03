@@ -1,19 +1,33 @@
-import { Suspense } from 'react';
 import { Sidebar } from '@/components/layout/sidebar';
 import { MapSkeleton } from '@/components/map/map-skeleton';
-import { NetworkListContainer, NetworkListSkeleton, NetworksIntro } from '@/components/networks';
+import { NetworkFilters, NetworkListContainer, NetworksIntro } from '@/components/networks';
+import { fetchNetworks } from '@/lib/api/networks';
+import { getUniqueCountries } from '@/lib/utils';
+import type { NetworkFilters as NetworkFiltersType } from '@/types';
 
-export default function Home() {
+interface PageProps {
+  searchParams: Promise<{ country?: string; search?: string }>;
+}
+
+export default async function Home({ searchParams }: PageProps) {
+  const params = await searchParams;
+
+  const filters: NetworkFiltersType = {
+    country: params.country || undefined,
+    search: params.search || undefined,
+  };
+
+  const networks = await fetchNetworks();
+  const countries = getUniqueCountries(networks);
+
   return (
     <div className="flex h-screen flex-col lg:flex-row">
       {/* Sidebar - Network list and filters */}
       <Sidebar>
         <div className="flex flex-col gap-6">
           <NetworksIntro />
-          {/* Search and filters will go here */}
-          <Suspense fallback={<NetworkListSkeleton />}>
-            <NetworkListContainer />
-          </Suspense>
+          <NetworkFilters countries={countries} />
+          <NetworkListContainer networks={networks} filters={filters} />
         </div>
       </Sidebar>
 

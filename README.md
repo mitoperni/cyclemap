@@ -66,6 +66,5 @@ On every PR and push to main:
 - React 19
 - TypeScript 5
 - Tailwind CSS v4
-- Shadcn/ui
 - Zod (schema validation)
 - Vitest (testing)
