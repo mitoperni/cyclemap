@@ -67,7 +67,9 @@ describe('NetworkSchema', () => {
     };
 
     const result = NetworkSchema.parse(networkWithGbfs);
-    expect(result.gbfs_href).toBe('https://dubai.publicbikesystem.net/customer/gbfs/v2/en/gbfs.json');
+    expect(result.gbfs_href).toBe(
+      'https://dubai.publicbikesystem.net/customer/gbfs/v2/en/gbfs.json'
+    );
   });
 
   it('should transform null company to empty array', () => {

@@ -52,12 +52,9 @@ describe('fetchNetworkDetail', () => {
 
     const result = await fetchNetworkDetail(mockNetworkId);
 
-    expect(global.fetch).toHaveBeenCalledWith(
-      `${API_BASE}/networks/${mockNetworkId}`,
-      {
-        next: { revalidate: CACHE_TIMES.NETWORK_DETAIL },
-      }
-    );
+    expect(global.fetch).toHaveBeenCalledWith(`${API_BASE}/networks/${mockNetworkId}`, {
+      next: { revalidate: CACHE_TIMES.NETWORK_DETAIL },
+    });
     expect(result).toEqual(mockResponse.network);
     expect(result.ebikes).toBe(true);
     expect(result.stations).toHaveLength(1);
@@ -211,9 +208,7 @@ describe('fetchNetworkDetail', () => {
       status: 404,
     });
 
-    await expect(fetchNetworkDetail(mockNetworkId)).rejects.toThrow(
-      'Failed to fetch network: 404'
-    );
+    await expect(fetchNetworkDetail(mockNetworkId)).rejects.toThrow('Failed to fetch network: 404');
   });
 
   it('should throw error when response has invalid schema', async () => {
@@ -235,9 +230,7 @@ describe('fetchNetworkDetail', () => {
   it('should throw error when fetch throws', async () => {
     global.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
 
-    await expect(fetchNetworkDetail(mockNetworkId)).rejects.toThrow(
-      'Network error'
-    );
+    await expect(fetchNetworkDetail(mockNetworkId)).rejects.toThrow('Network error');
   });
 
   it('should use correct cache revalidation time', async () => {

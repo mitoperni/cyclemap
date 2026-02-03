@@ -6,6 +6,7 @@
 !.gitignore
 !.prettierrc
 !.github
+!.husky
 
 # dependencies
 /node_modules

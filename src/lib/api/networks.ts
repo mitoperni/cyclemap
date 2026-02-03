@@ -17,16 +17,11 @@ export async function fetchNetworks(): Promise<Network[]> {
   return validated.networks;
 }
 
-export function filterNetworks(
-  networks: Network[],
-  filters: NetworkFilters
-): Network[] {
+export function filterNetworks(networks: Network[], filters: NetworkFilters): Network[] {
   let filtered = [...networks];
 
   if (filters.country) {
-    filtered = filtered.filter(
-      (n) => n.location.country === filters.country
-    );
+    filtered = filtered.filter((n) => n.location.country === filters.country);
   }
 
   if (filters.search) {

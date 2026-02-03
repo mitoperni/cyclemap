@@ -19,7 +19,7 @@ describe('filterNetworks', () => {
     },
     {
       id: 'velib',
-      name: 'Vélib\' Métropole',
+      name: "Vélib' Métropole",
       href: '/v2/networks/velib',
       location: {
         city: 'Paris',
@@ -96,7 +96,7 @@ describe('filterNetworks', () => {
     it('should filter networks by partial name match', () => {
       const result = filterNetworks(mockNetworks, { search: 'bike' });
       expect(result).toHaveLength(1);
-      expect(result.map(n => n.id)).toContain('citybike-wien');
+      expect(result.map((n) => n.id)).toContain('citybike-wien');
     });
 
     it('should filter networks by company name', () => {
@@ -321,9 +321,7 @@ describe('fetchNetworks', () => {
       status: 500,
     });
 
-    await expect(fetchNetworks()).rejects.toThrow(
-      'Failed to fetch networks: 500'
-    );
+    await expect(fetchNetworks()).rejects.toThrow('Failed to fetch networks: 500');
   });
 
   it('should throw error when response has invalid schema', async () => {
