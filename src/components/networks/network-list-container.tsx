@@ -1,8 +1,14 @@
 import { NetworkList } from './network-list';
-import { fetchNetworks } from '@/lib/api/networks';
+import { filterNetworks } from '@/lib/api/networks';
+import type { Network, NetworkFilters } from '@/types';
 
-export async function NetworkListContainer() {
-  const networks = await fetchNetworks();
+interface NetworkListContainerProps {
+  networks: Network[];
+  filters?: NetworkFilters;
+}
 
-  return <NetworkList networks={networks} />;
+export function NetworkListContainer({ networks, filters = {} }: NetworkListContainerProps) {
+  const filteredNetworks = filterNetworks(networks, filters);
+
+  return <NetworkList networks={filteredNetworks} />;
 }

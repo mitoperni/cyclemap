@@ -18,3 +18,7 @@ export const PAGINATION = {
 export const NETWORK_CARD = {
   MAX_VISIBLE_COMPANIES: 2,
 } as const;
+
+export const USE_URL_PARAMS = {
+  DEBOUNCE_MS: 300,
+} as const;

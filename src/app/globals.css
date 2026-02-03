@@ -1,5 +1,15 @@
 @import 'tailwindcss';
 
+/* Hide scrollbar globally */
+* {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 @theme inline {
   /* ============================================
      TOREA BAY - Primary Blues

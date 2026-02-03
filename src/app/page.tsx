@@ -1,20 +1,21 @@
 import { Suspense } from 'react';
 import { Sidebar } from '@/components/layout/sidebar';
 import { MapSkeleton } from '@/components/map/map-skeleton';
-import { NetworkListContainer, NetworkListSkeleton, NetworksIntro } from '@/components/networks';
+import { NetworkSidebar, NetworkListSkeleton } from '@/components/networks';
+import { fetchNetworks } from '@/lib/api/networks';
+import { getUniqueCountries } from '@/lib/utils';
 
-export default function Home() {
+export default async function Home() {
+  const networks = await fetchNetworks();
+  const countries = getUniqueCountries(networks);
+
   return (
     <div className="flex h-screen flex-col lg:flex-row">
       {/* Sidebar - Network list and filters */}
       <Sidebar>
-        <div className="flex flex-col gap-6">
-          <NetworksIntro />
-          {/* Search and filters will go here */}
-          <Suspense fallback={<NetworkListSkeleton />}>
-            <NetworkListContainer />
-          </Suspense>
-        </div>
+        <Suspense fallback={<NetworkListSkeleton />}>
+          <NetworkSidebar networks={networks} countries={countries} />
+        </Suspense>
       </Sidebar>
 
       {/* Map area - Takes remaining space */}
