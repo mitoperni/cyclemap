@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
+import { CountrySelect } from '@/components/ui/country-select';
 import { useUrlParams } from '@/hooks/use-url-params';
 
 interface NetworkFiltersProps {
@@ -28,8 +28,8 @@ export function NetworkFilters({ countries }: NetworkFiltersProps) {
     setSearch('');
   };
 
-  const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCountry(e.target.value);
+  const handleCountryChange = (value: string) => {
+    setCountry(value);
   };
 
   return (
@@ -43,19 +43,12 @@ export function NetworkFilters({ countries }: NetworkFiltersProps) {
         showSearchIcon
         aria-label="Search networks by name or company"
       />
-      <Select
+      <CountrySelect
         value={countryValue}
         onChange={handleCountryChange}
-        showLocationIcon
-        aria-label="Filter by country"
-      >
-        <option value="">Country</option>
-        {countries.map((country) => (
-          <option key={country} value={country}>
-            {country}
-          </option>
-        ))}
-      </Select>
+        countries={countries}
+        placeholder="Country"
+      />
     </div>
   );
 }

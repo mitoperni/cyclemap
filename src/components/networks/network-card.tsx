@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { MapPin, Building2, ArrowRight } from 'lucide-react';
 import { NETWORK_CARD } from '@/lib/constants';
+import { getCountryName } from '@/lib/utils';
 import type { Network } from '@/types';
 
 interface NetworkCardProps {
@@ -30,7 +31,7 @@ export function NetworkCard({ network }: NetworkCardProps) {
                 <MapPin className="h-4 w-4 text-grenadier-400" />
               </div>
               <span className="leading-7 text-muted-foreground">
-                {location.city}, {location.country}
+                {location.city}, {getCountryName(location.country)}
               </span>
             </div>
 
