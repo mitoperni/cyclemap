@@ -33,6 +33,11 @@
   --color-grenadier-900: #782116;
   --color-grenadier-950: #410f09;
 
+  /* ============================================
+       Layout Variables
+       ============================================ */
+  --color-muted-foreground: #71717a;
+
   /* Layout */
   --sidebar-width: 551px;
 }

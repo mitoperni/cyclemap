@@ -1,15 +1,19 @@
+import { Suspense } from 'react';
 import { Sidebar } from '@/components/layout/sidebar';
 import { MapSkeleton } from '@/components/map/map-skeleton';
+import { NetworkListContainer, NetworkListSkeleton, NetworksIntro } from '@/components/networks';
 
 export default function Home() {
   return (
     <div className="flex h-screen flex-col lg:flex-row">
       {/* Sidebar - Network list and filters */}
       <Sidebar>
-        <div className="p-4">
-          <p className="text-sm text-torea-bay-500">
-            Network list and filters will be displayed here
-          </p>
+        <div className="flex flex-col gap-6">
+          <NetworksIntro />
+          {/* Search and filters will go here */}
+          <Suspense fallback={<NetworkListSkeleton />}>
+            <NetworkListContainer />
+          </Suspense>
         </div>
       </Sidebar>
 

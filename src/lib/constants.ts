@@ -14,3 +14,7 @@ export const MAP_CONFIG = {
 export const PAGINATION = {
   DEFAULT_PAGE_SIZE: 10,
 } as const;
+
+export const NETWORK_CARD = {
+  MAX_VISIBLE_COMPANIES: 2,
+} as const;
