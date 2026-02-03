@@ -1,15 +1,22 @@
-import { fetchNetworks } from '@/lib/api/networks';
+import { Sidebar } from '@/components/layout/sidebar';
+import { MapSkeleton } from '@/components/map/map-skeleton';
 
-export default async function Home() {
-  const networks = await fetchNetworks();
-
+export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-torea-bay-700">CycleMap</h1>
-        <p className="mt-2 text-zinc-500">Explore bicycle sharing networks around the world</p>
-        <p className="mt-4 text-sm text-zinc-400">API Test: Found {networks.length} networks</p>
-      </div>
-    </main>
+    <div className="flex h-screen flex-col lg:flex-row">
+      {/* Sidebar - Network list and filters */}
+      <Sidebar>
+        <div className="p-4">
+          <p className="text-sm text-torea-bay-500">
+            Network list and filters will be displayed here
+          </p>
+        </div>
+      </Sidebar>
+
+      {/* Map area - Takes remaining space */}
+      <main className="relative min-h-[300px] flex-1 lg:min-h-0">
+        <MapSkeleton />
+      </main>
+    </div>
   );
 }
