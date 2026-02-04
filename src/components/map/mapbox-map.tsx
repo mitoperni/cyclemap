@@ -2,12 +2,13 @@
 
 import { useRef, useCallback, useState } from 'react';
 import Map, { NavigationControl } from 'react-map-gl/mapbox';
-import type { MapRef, ErrorEvent } from 'react-map-gl/mapbox';
+import type { MapRef, ErrorEvent, MapMouseEvent } from 'react-map-gl/mapbox';
+import type { GeoJSONSource } from 'mapbox-gl';
 import { useRouter } from 'next/navigation';
-import { MapMarkers } from './map-markers';
+import { ClusterMarkers } from './cluster-markers';
 import { MapError } from './map-error';
 import { useFitBounds } from '@/hooks/use-fit-bounds';
-import { MAP_CONFIG, MAPBOX_CONFIG } from '@/lib/constants';
+import { MAP_CONFIG, MAPBOX_CONFIG, CLUSTER_CONFIG } from '@/lib/constants';
 import type { Network } from '@/types';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -18,6 +19,9 @@ interface MapboxMapProps {
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
+// Only cluster layers are interactive (individual markers are React components)
+const INTERACTIVE_LAYER_IDS = [...CLUSTER_CONFIG.LAYER_IDS.CLUSTERS];
+
 export function MapboxMap({ networks }: MapboxMapProps) {
   const mapRef = useRef<MapRef>(null);
   const router = useRouter();
@@ -26,19 +30,65 @@ export function MapboxMap({ networks }: MapboxMapProps) {
   // Auto-fit bounds when networks change
   useFitBounds(mapRef, networks);
 
-  const handleMarkerClick = useCallback(
-    (networkId: string) => {
-      router.push(`/network/${networkId}`);
-    },
-    [router]
-  );
-
   const handleMapError = useCallback((e: ErrorEvent) => {
     const errorMessage = e.error?.message || '';
     if (errorMessage.includes('access token')) {
       setMapError('Invalid or missing Mapbox access token. Please check your configuration.');
     } else {
       setMapError(errorMessage || 'Failed to load the map. Please try again.');
+    }
+  }, []);
+
+  const handleNetworkClick = useCallback(
+    (networkId: string) => {
+      router.push(`/network/${networkId}`);
+    },
+    [router]
+  );
+
+  const handleMapClick = useCallback((e: MapMouseEvent) => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    // Query features at click point (only clusters)
+    const features = map.queryRenderedFeatures(e.point, {
+      layers: INTERACTIVE_LAYER_IDS,
+    });
+
+    if (!features.length) return;
+
+    const feature = features[0];
+    const clusterId = feature.properties?.cluster_id;
+
+    if (clusterId === undefined) return;
+
+    const source = map.getSource('networks') as GeoJSONSource;
+    if (!source) return;
+
+    // Zoom to expand cluster
+    source.getClusterExpansionZoom(clusterId, (err, zoom) => {
+      if (err || zoom === undefined || zoom === null) return;
+
+      const geometry = feature.geometry as GeoJSON.Point;
+      map.easeTo({
+        center: geometry.coordinates as [number, number],
+        zoom,
+        duration: CLUSTER_CONFIG.ZOOM_ANIMATION_DURATION,
+      });
+    });
+  }, []);
+
+  const handleMouseEnter = useCallback(() => {
+    const map = mapRef.current;
+    if (map) {
+      map.getCanvas().style.cursor = 'pointer';
+    }
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    const map = mapRef.current;
+    if (map) {
+      map.getCanvas().style.cursor = '';
     }
   }, []);
 
@@ -72,9 +122,13 @@ export function MapboxMap({ networks }: MapboxMapProps) {
       projection="mercator"
       style={{ width: '100%', height: '100%' }}
       onError={handleMapError}
+      onClick={handleMapClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      interactiveLayerIds={INTERACTIVE_LAYER_IDS}
     >
       <NavigationControl position="bottom-right" showCompass={false} />
-      <MapMarkers networks={networks} onMarkerClick={handleMarkerClick} />
+      <ClusterMarkers networks={networks} onNetworkClick={handleNetworkClick} />
     </Map>
   );
 }
