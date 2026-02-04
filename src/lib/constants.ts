@@ -9,6 +9,30 @@ export const MAP_CONFIG = {
   DEFAULT_CENTER: { lat: 40.4168, lng: -3.7038 }, // Madrid
   DEFAULT_ZOOM: 2,
   DETAIL_ZOOM: 13,
+  MIN_ZOOM: 1,
+  MAX_ZOOM: 18,
+  FIT_BOUNDS_PADDING: 50,
+  FIT_BOUNDS_MAX_ZOOM: 12,
+  ANIMATION_DURATION: 1500,
+} as const;
+
+export const MAPBOX_CONFIG = {
+  STYLE: 'mapbox://styles/mapbox/light-v11',
+} as const;
+
+export const CLUSTER_CONFIG = {
+  MAX_ZOOM: 14, // Stop clustering at this zoom level
+  RADIUS: 50, // Cluster radius in pixels
+  ZOOM_ANIMATION_DURATION: 500, // ms for zoom animation when clicking cluster
+  // Grenadier color scale - darker = more networks
+  COLORS: {
+    SMALL: '#f37b44', // grenadier-400: < 10 points
+    MEDIUM: '#de3e15', // grenadier-600: 10-99 points
+    LARGE: '#942618', // grenadier-800: 100+ points
+  },
+  LAYER_IDS: {
+    CLUSTERS: ['clusters-large', 'clusters-medium', 'clusters-small'] as const,
+  },
 } as const;
 
 export const PAGINATION = {
