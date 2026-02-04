@@ -9,6 +9,15 @@ export const MAP_CONFIG = {
   DEFAULT_CENTER: { lat: 40.4168, lng: -3.7038 }, // Madrid
   DEFAULT_ZOOM: 2,
   DETAIL_ZOOM: 13,
+  MIN_ZOOM: 1,
+  MAX_ZOOM: 18,
+  FIT_BOUNDS_PADDING: 50,
+  FIT_BOUNDS_MAX_ZOOM: 12,
+  ANIMATION_DURATION: 1500,
+} as const;
+
+export const MAPBOX_CONFIG = {
+  STYLE: 'mapbox://styles/mapbox/light-v11',
 } as const;
 
 export const PAGINATION = {
