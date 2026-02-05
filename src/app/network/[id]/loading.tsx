@@ -1,17 +1,16 @@
-import { Sidebar } from '@/components/layout/sidebar';
+import { SidebarStation } from '@/components/layout/sidebar-station';
 import { StationsTableSkeleton } from '@/components/stations/stations-table-skeleton';
+import { MapSkeleton } from '@/components/map/map-skeleton';
 
 export default function NetworkDetailLoading() {
   return (
     <div className="flex h-screen flex-col lg:flex-row">
-      <Sidebar>
+      <SidebarStation>
         <StationsTableSkeleton />
-      </Sidebar>
+      </SidebarStation>
 
       <main className="relative min-h-[300px] flex-1 lg:min-h-0">
-        <div className="flex h-full items-center justify-center bg-torea-bay-50">
-          <div className="animate-pulse text-torea-bay-400">Loading map...</div>
-        </div>
+        <MapSkeleton />
       </main>
     </div>
   );
