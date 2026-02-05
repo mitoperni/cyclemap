@@ -65,3 +65,13 @@ export const NETWORK_CARD = {
 export const USE_URL_PARAMS = {
   DEBOUNCE_MS: 300,
 } as const;
+
+export const GEOLOCATION_CONFIG = {
+  DEFAULT_OPTIONS: {
+    enableHighAccuracy: true,
+    timeout: 10000,
+    maximumAge: 60000,
+  },
+  NETWORK_ZOOM: 11,
+  STATION_ZOOM: 16,
+} as const;

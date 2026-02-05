@@ -7,8 +7,9 @@ import type { GeoJSONSource } from 'mapbox-gl';
 import { useRouter } from 'next/navigation';
 import { ClusterMarkers } from './cluster-markers';
 import { MapError } from './map-error';
+import { NearMeButton } from './near-me-button';
 import { useFitBounds } from '@/hooks/use-fit-bounds';
-import { MAP_CONFIG, MAPBOX_CONFIG, CLUSTER_CONFIG } from '@/lib/constants';
+import { MAP_CONFIG, MAPBOX_CONFIG, CLUSTER_CONFIG, GEOLOCATION_CONFIG } from '@/lib/constants';
 import type { Network } from '@/types';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -127,6 +128,11 @@ export function MapboxMap({ networks }: MapboxMapProps) {
       onMouseLeave={handleMouseLeave}
       interactiveLayerIds={INTERACTIVE_LAYER_IDS}
     >
+      <NearMeButton
+        mapRef={mapRef}
+        zoom={GEOLOCATION_CONFIG.NETWORK_ZOOM}
+        className="absolute left-8 top-8 z-10"
+      />
       <NavigationControl position="bottom-right" showCompass={false} />
       <ClusterMarkers networks={networks} onNetworkClick={handleNetworkClick} />
     </Map>

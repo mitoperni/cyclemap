@@ -19,14 +19,16 @@ export function NetworkDetailClient({ network }: NetworkDetailClientProps) {
 
   return (
     <StationsSyncProvider stations={network.stations} initialCenter={center}>
-      <SidebarStation>
-        <StationsHeader network={network} />
-        <StationsTable />
-      </SidebarStation>
+      <div className="flex h-screen flex-col lg:flex-row">
+        <SidebarStation>
+          <StationsHeader network={network} />
+          <StationsTable />
+        </SidebarStation>
 
-      <main className="relative min-h-[300px] flex-1 lg:min-h-0">
-        <StationsMapContainer center={center} />
-      </main>
+        <main className="relative min-h-[300px] flex-1 lg:min-h-0">
+          <StationsMapContainer center={center} />
+        </main>
+      </div>
     </StationsSyncProvider>
   );
 }

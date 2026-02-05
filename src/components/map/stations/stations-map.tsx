@@ -1,13 +1,14 @@
 'use client';
 
-import { useCallback, useState, useEffect, useMemo } from 'react';
+import { useCallback, useState, useEffect, useMemo, useRef } from 'react';
 import Map, { NavigationControl } from 'react-map-gl/mapbox';
 import type { MapRef, ErrorEvent } from 'react-map-gl/mapbox';
 import { StationClusterMarkers } from './station-cluster-markers';
 import { StationPopup } from './station-popup';
 import { MapError } from '../map-error';
+import { NearMeButton } from '../near-me-button';
 import { useStationsSync } from '@/contexts/stations-sync-context';
-import { MAP_CONFIG, MAPBOX_CONFIG } from '@/lib/constants';
+import { MAP_CONFIG, MAPBOX_CONFIG, GEOLOCATION_CONFIG } from '@/lib/constants';
 import type { Station } from '@/types';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -25,6 +26,7 @@ export function StationsMap({ center }: StationsMapProps) {
   const [mapInstance, setMapInstance] = useState<MapRef | null>(null);
   const [mapClickedStationId, setMapClickedStationId] = useState<string | null>(null);
   const [mapError, setMapError] = useState<string | null>(null);
+  const nearMeMapRef = useRef<MapRef | null>(null);
 
   // Callback ref to capture the map instance
   const mapRefCallback = useCallback(
@@ -32,6 +34,7 @@ export function StationsMap({ center }: StationsMapProps) {
       if (ref) {
         setMapInstance(ref);
         registerMapRef(ref);
+        nearMeMapRef.current = ref;
       }
     },
     [registerMapRef]
@@ -123,6 +126,11 @@ export function StationsMap({ center }: StationsMapProps) {
       onError={handleMapError}
       onClick={handleMapClick}
     >
+      <NearMeButton
+        mapRef={nearMeMapRef}
+        zoom={GEOLOCATION_CONFIG.STATION_ZOOM}
+        className="absolute left-8 top-8 z-10"
+      />
       <NavigationControl position="bottom-right" showCompass={false} />
 
       <StationClusterMarkers
