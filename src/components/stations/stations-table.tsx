@@ -1,12 +1,20 @@
+'use client';
+
+import { useCallback } from 'react';
 import { StationRow } from './station-row';
-import type { Station } from '@/types';
+import { useStationsSync } from '@/contexts/stations-sync-context';
 
-interface StationsTableProps {
-  stations: Station[];
-}
+export function StationsTable() {
+  const { sortedStations, flyToStation, selectedStationId } = useStationsSync();
 
-export function StationsTable({ stations }: StationsTableProps) {
-  if (stations.length === 0) {
+  const handleStationClick = useCallback(
+    (stationId: string) => {
+      flyToStation(stationId);
+    },
+    [flyToStation]
+  );
+
+  if (sortedStations.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <p className="text-lg font-medium text-torea-bay-800">No stations available</p>
@@ -25,7 +33,7 @@ export function StationsTable({ stations }: StationsTableProps) {
           <span className="text-sm text-white">
             All{' '}
             <span className="text-sm border border-grenadier-400 rounded-[2px] mx-2 px-1 py-0.5 text-grenadier-400">
-              {stations.length}
+              {sortedStations.length}
             </span>
             stations
           </span>
@@ -47,8 +55,13 @@ export function StationsTable({ stations }: StationsTableProps) {
           </tr>
         </thead>
         <tbody>
-          {stations.map((station) => (
-            <StationRow key={station.id} station={station} />
+          {sortedStations.map((station) => (
+            <StationRow
+              key={station.id}
+              station={station}
+              isSelected={selectedStationId === station.id}
+              onClick={() => handleStationClick(station.id)}
+            />
           ))}
         </tbody>
       </table>

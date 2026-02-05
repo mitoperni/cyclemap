@@ -91,7 +91,7 @@ describe('useFitBounds', () => {
 
       expect(mockRef.flyTo).toHaveBeenCalledWith({
         center: [2.1734, 41.3851],
-        zoom: 13, // DETAIL_ZOOM from constants
+        zoom: MAP_CONFIG.DETAIL_ZOOM,
         duration: MAP_CONFIG.ANIMATION_DURATION,
         essential: true,
       });

@@ -1,0 +1,137 @@
+'use client';
+
+import { useCallback, useState, useEffect, useMemo } from 'react';
+import Map, { NavigationControl } from 'react-map-gl/mapbox';
+import type { MapRef, ErrorEvent } from 'react-map-gl/mapbox';
+import { StationClusterMarkers } from './station-cluster-markers';
+import { StationPopup } from './station-popup';
+import { MapError } from '../map-error';
+import { useStationsSync } from '@/contexts/stations-sync-context';
+import { MAP_CONFIG, MAPBOX_CONFIG } from '@/lib/constants';
+import type { Station } from '@/types';
+
+import 'mapbox-gl/dist/mapbox-gl.css';
+
+interface StationsMapProps {
+  center: { latitude: number; longitude: number };
+}
+
+const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+
+export function StationsMap({ center }: StationsMapProps) {
+  const { stations, registerMapRef, updateMapCenter, selectedStationId, clearSelection } =
+    useStationsSync();
+
+  const [mapInstance, setMapInstance] = useState<MapRef | null>(null);
+  const [mapClickedStationId, setMapClickedStationId] = useState<string | null>(null);
+  const [mapError, setMapError] = useState<string | null>(null);
+
+  // Callback ref to capture the map instance
+  const mapRefCallback = useCallback(
+    (ref: MapRef | null) => {
+      if (ref) {
+        setMapInstance(ref);
+        registerMapRef(ref);
+      }
+    },
+    [registerMapRef]
+  );
+
+  // Create station lookup for quick access
+  const stationLookup = useMemo(() => {
+    const lookup = new globalThis.Map<string, Station>();
+    stations.forEach((s) => lookup.set(s.id, s));
+    return lookup;
+  }, [stations]);
+
+  // Derive selected station - sidebar selection takes priority over map click
+  const selectedStation = useMemo(() => {
+    const idToUse = selectedStationId || mapClickedStationId;
+    if (!idToUse) return null;
+    return stationLookup.get(idToUse) || null;
+  }, [selectedStationId, mapClickedStationId, stationLookup]);
+
+  // Update map center on moveend
+  useEffect(() => {
+    if (!mapInstance) return;
+
+    const handleMoveEnd = () => {
+      const mapCenter = mapInstance.getCenter();
+      updateMapCenter({
+        latitude: mapCenter.lat,
+        longitude: mapCenter.lng,
+      });
+    };
+
+    mapInstance.on('moveend', handleMoveEnd);
+    return () => {
+      mapInstance.off('moveend', handleMoveEnd);
+    };
+  }, [mapInstance, updateMapCenter]);
+
+  const handleMapError = useCallback((e: ErrorEvent) => {
+    const errorMessage = e.error?.message || '';
+    if (errorMessage.includes('access token')) {
+      setMapError('Invalid or missing Mapbox access token. Please check your configuration.');
+    } else {
+      setMapError(errorMessage || 'Failed to load the map. Please try again.');
+    }
+  }, []);
+
+  const handleStationClick = useCallback((station: Station) => {
+    setMapClickedStationId(station.id);
+  }, []);
+
+  const handleClosePopup = useCallback(() => {
+    setMapClickedStationId(null);
+    clearSelection();
+  }, [clearSelection]);
+
+  const handleMapClick = useCallback(() => {
+    setMapClickedStationId(null);
+    clearSelection();
+  }, [clearSelection]);
+
+  if (!MAPBOX_TOKEN) {
+    return (
+      <MapError
+        title="Configuration Error"
+        message="Mapbox access token is not configured. Please add NEXT_PUBLIC_MAPBOX_TOKEN to your environment variables."
+      />
+    );
+  }
+
+  if (mapError) {
+    return <MapError message={mapError} onRetry={() => setMapError(null)} />;
+  }
+
+  return (
+    <Map
+      ref={mapRefCallback}
+      reuseMaps={true}
+      mapboxAccessToken={MAPBOX_TOKEN}
+      initialViewState={{
+        longitude: center.longitude,
+        latitude: center.latitude,
+        zoom: MAP_CONFIG.DETAIL_ZOOM,
+      }}
+      minZoom={MAP_CONFIG.MIN_ZOOM}
+      maxZoom={MAP_CONFIG.MAX_ZOOM}
+      mapStyle={MAPBOX_CONFIG.STYLE}
+      projection="mercator"
+      style={{ width: '100%', height: '100%' }}
+      onError={handleMapError}
+      onClick={handleMapClick}
+    >
+      <NavigationControl position="bottom-right" showCompass={false} />
+
+      <StationClusterMarkers
+        stations={stations}
+        selectedStation={selectedStation}
+        onStationClick={handleStationClick}
+      />
+
+      {selectedStation && <StationPopup station={selectedStation} onClose={handleClosePopup} />}
+    </Map>
+  );
+}
