@@ -1,9 +1,5 @@
-import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
-import { StationsTableSkeleton } from '@/components/stations/stations-table-skeleton';
-import { MapSkeleton } from '@/components/map';
 import { fetchNetworkDetail } from '@/lib/api/network-detail';
-import { SidebarStation } from '@/components/layout/sidebar-station';
 import { NetworkDetailClient } from './network-detail-client';
 
 interface NetworkDetailPageProps {
@@ -26,7 +22,8 @@ export async function generateMetadata({ params }: NetworkDetailPageProps) {
   }
 }
 
-async function NetworkData({ id }: { id: string }) {
+export default async function NetworkDetailPage({ params }: NetworkDetailPageProps) {
+  const { id } = await params;
   const network = await fetchNetworkDetail(id);
 
   if (!network) {
@@ -34,27 +31,4 @@ async function NetworkData({ id }: { id: string }) {
   }
 
   return <NetworkDetailClient network={network} />;
-}
-
-export default async function NetworkDetailPage({ params }: NetworkDetailPageProps) {
-  const { id } = await params;
-
-  return (
-    <div className="flex h-screen flex-col lg:flex-row">
-      <Suspense
-        fallback={
-          <>
-            <SidebarStation>
-              <StationsTableSkeleton />
-            </SidebarStation>
-            <main className="relative min-h-[300px] flex-1 lg:min-h-0">
-              <MapSkeleton />
-            </main>
-          </>
-        }
-      >
-        <NetworkData id={id} />
-      </Suspense>
-    </div>
-  );
 }
