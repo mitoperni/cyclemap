@@ -3,7 +3,7 @@
 import { useRef, useCallback, useState } from 'react';
 import Map, { NavigationControl } from 'react-map-gl/mapbox';
 import type { MapRef, ErrorEvent } from 'react-map-gl/mapbox';
-import { StationPin } from './station-pin';
+import { StationClusterMarkers } from './station-cluster-markers';
 import { StationPopup } from './station-popup';
 import { MapError } from '../map-error';
 import { MAP_CONFIG, MAPBOX_CONFIG } from '@/lib/constants';
@@ -79,15 +79,12 @@ export function StationsMap({ stations, center }: StationsMapProps) {
     >
       <NavigationControl position="bottom-right" showCompass={false} />
 
-      {/* Station markers */}
-      {stations.map((station) => (
-        <StationPin
-          key={station.id}
-          station={station}
-          isSelected={selectedStation?.id === station.id}
-          onClick={handleStationClick}
-        />
-      ))}
+      {/* Station cluster markers */}
+      <StationClusterMarkers
+        stations={stations}
+        selectedStation={selectedStation}
+        onStationClick={handleStationClick}
+      />
 
       {/* Popup for selected station */}
       {selectedStation && <StationPopup station={selectedStation} onClose={handleClosePopup} />}

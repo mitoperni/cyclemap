@@ -35,6 +35,25 @@ export const CLUSTER_CONFIG = {
   },
 } as const;
 
+export const STATION_CLUSTER_CONFIG = {
+  MAX_ZOOM: 16, // Stop clustering at higher zoom for station detail
+  RADIUS: 40, // Slightly smaller radius for denser station maps
+  ZOOM_ANIMATION_DURATION: 500,
+  // Torea-bay color scale for stations
+  COLORS: {
+    SMALL: '#5b7ec1', // torea-bay-400: < 5 stations
+    MEDIUM: '#3956a3', // torea-bay-600: 5-19 stations
+    LARGE: '#243a6e', // torea-bay-800: 20+ stations
+  },
+  LAYER_IDS: {
+    CLUSTERS: [
+      'station-clusters-large',
+      'station-clusters-medium',
+      'station-clusters-small',
+    ] as const,
+  },
+} as const;
+
 export const PAGINATION = {
   DEFAULT_PAGE_SIZE: 10,
 } as const;
