@@ -102,3 +102,20 @@ export interface MapPopupProps {
   station: Station;
   onClose: () => void;
 }
+
+// ============================================
+// Geolocation Types
+// ============================================
+
+export interface GeolocationPosition {
+  latitude: number;
+  longitude: number;
+  accuracy?: number;
+  timestamp?: number;
+}
+
+export type GeolocationError =
+  | 'PERMISSION_DENIED'
+  | 'POSITION_UNAVAILABLE'
+  | 'TIMEOUT'
+  | 'NOT_SUPPORTED';

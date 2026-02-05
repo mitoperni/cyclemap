@@ -58,6 +58,52 @@ describe('cleanStationName', () => {
     });
   });
 
+  describe('removes short code prefixes', () => {
+    it('should clean "AUH - Marina Mall Signal" → "Marina Mall Signal"', () => {
+      expect(cleanStationName('AUH - Marina Mall Signal')).toBe('Marina Mall Signal');
+    });
+
+    it('should clean "NYC - Central Park" → "Central Park"', () => {
+      expect(cleanStationName('NYC - Central Park')).toBe('Central Park');
+    });
+
+    it('should clean "AB - Short Code" → "Short Code"', () => {
+      expect(cleanStationName('AB - Short Code')).toBe('Short Code');
+    });
+
+    it('should clean "ABCD - Four Letter Code" → "Four Letter Code"', () => {
+      expect(cleanStationName('ABCD - Four Letter Code')).toBe('Four Letter Code');
+    });
+
+    it('should not remove longer prefixes like "ABCDE - Station"', () => {
+      expect(cleanStationName('ABCDE - Station')).toBe('ABCDE - Station');
+    });
+  });
+
+  describe('handles underscore prefix with ALL CAPS', () => {
+    it('should clean "_CALLE LAS LEANDRAS" → "Calle Las Leandras"', () => {
+      expect(cleanStationName('_CALLE LAS LEANDRAS')).toBe('Calle Las Leandras');
+    });
+
+    it('should clean "__DOUBLE UNDERSCORE" → "Double Underscore"', () => {
+      expect(cleanStationName('__DOUBLE UNDERSCORE')).toBe('Double Underscore');
+    });
+
+    it('should clean "_PLAZA MAYOR" → "Plaza Mayor"', () => {
+      expect(cleanStationName('_PLAZA MAYOR')).toBe('Plaza Mayor');
+    });
+
+    it('should remove underscore but keep mixed case as-is', () => {
+      expect(cleanStationName('_Already Mixed Case')).toBe('Already Mixed Case');
+    });
+
+    it('should handle accented characters correctly', () => {
+      expect(cleanStationName('_CALLE JOSÉ MARÍA MORENO GALVÁN')).toBe(
+        'Calle José María Moreno Galván'
+      );
+    });
+  });
+
   describe('edge cases', () => {
     it('should trim whitespace from result', () => {
       expect(cleanStationName('  Station Name  ')).toBe('Station Name');
@@ -75,7 +121,7 @@ describe('cleanStationName', () => {
       expect(cleanStationName('42 - ')).toBe('');
     });
 
-    it('should not remove letters at the start', () => {
+    it('should not remove single letter at the start', () => {
       expect(cleanStationName('A - Station')).toBe('A - Station');
     });
 

@@ -62,7 +62,7 @@ export function StationClusterMarkers({
 
   // Update unclustered stations when map moves or data changes
   const updateUnclusteredStations = useCallback(() => {
-    if (!map) return;
+    if (!map || !map.isStyleLoaded()) return;
 
     // Query rendered features that are NOT clustered
     const features = map.querySourceFeatures('stations', {
@@ -105,21 +105,25 @@ export function StationClusterMarkers({
     map.on('moveend', handleUpdate);
     map.on('zoomend', handleUpdate);
     map.on('sourcedata', handleUpdate);
+    map.on('style.load', handleUpdate);
 
-    // Initial update
-    handleUpdate();
+    // Initial update only if style is already loaded
+    if (map.isStyleLoaded()) {
+      handleUpdate();
+    }
 
     return () => {
       map.off('moveend', handleUpdate);
       map.off('zoomend', handleUpdate);
       map.off('sourcedata', handleUpdate);
+      map.off('style.load', handleUpdate);
     };
   }, [map, updateUnclusteredStations]);
 
   // Handle cluster click - zoom into the cluster
   const handleClusterClick = useCallback(
     (e: MapMouseEvent) => {
-      if (!map) return;
+      if (!map || !map.isStyleLoaded()) return;
 
       const features = map.queryRenderedFeatures(e.point, {
         layers: [...STATION_CLUSTER_CONFIG.LAYER_IDS.CLUSTERS],
