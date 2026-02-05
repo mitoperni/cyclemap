@@ -24,3 +24,8 @@ export function getCountryName(code: string): string {
 export function getUniqueCountries(networks: Network[]): string[] {
   return Array.from(new Set(networks.map((n) => n.location.country))).sort();
 }
+
+export function cleanStationName(name: string): string {
+  const regex = /^\d+[\s\-\.]+\s*/;
+  return regex.test(name) ? name.replace(regex, '').trim() : name.trim();
+}
