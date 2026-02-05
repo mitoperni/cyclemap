@@ -11,8 +11,9 @@ import {
   type ReactNode,
 } from 'react';
 import type { MapRef } from 'react-map-gl/mapbox';
-import type { Station } from '@/types';
-import { MAP_CONFIG } from '@/lib/constants';
+import type { Station, PaginationInfo } from '@/types';
+import { MAP_CONFIG, PAGINATION } from '@/lib/constants';
+import { calculateDistance, paginateItems } from '@/lib/utils';
 
 interface MapCenter {
   latitude: number;
@@ -22,6 +23,10 @@ interface MapCenter {
 interface StationsSyncContextValue {
   stations: Station[];
   sortedStations: Station[];
+  paginatedStations: Station[];
+  pagination: PaginationInfo;
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
   selectedStationId: string | null;
   flyToStation: (stationId: string) => void;
   registerMapRef: (ref: MapRef | null) => void;
@@ -30,24 +35,6 @@ interface StationsSyncContextValue {
 }
 
 const StationsSyncContext = createContext<StationsSyncContextValue | null>(null);
-
-/**
- * Calculate distance between two coordinates using Haversine formula
- * @returns Distance in kilometers
- */
-function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const R = 6371; // Earth's radius in km
-  const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  const dLon = ((lon2 - lon1) * Math.PI) / 180;
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
 
 interface StationsSyncProviderProps {
   stations: Station[];
@@ -62,6 +49,7 @@ export function StationsSyncProvider({
 }: StationsSyncProviderProps) {
   const [mapCenter, setMapCenter] = useState<MapCenter>(initialCenter);
   const [selectedStationId, setSelectedStationId] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const mapRefInternal = useRef<MapRef | null>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -90,6 +78,11 @@ export function StationsSyncProvider({
       return distA - distB;
     });
   }, [stations, mapCenter]);
+
+  // Paginate sorted stations
+  const { items: paginatedStations, pagination } = useMemo(() => {
+    return paginateItems(sortedStations, currentPage, PAGINATION.DEFAULT_PAGE_SIZE);
+  }, [sortedStations, currentPage]);
 
   const registerMapRef = useCallback((ref: MapRef | null) => {
     mapRefInternal.current = ref;
@@ -141,6 +134,10 @@ export function StationsSyncProvider({
     () => ({
       stations,
       sortedStations,
+      paginatedStations,
+      pagination,
+      currentPage,
+      setCurrentPage,
       selectedStationId,
       flyToStation,
       registerMapRef,
@@ -150,6 +147,9 @@ export function StationsSyncProvider({
     [
       stations,
       sortedStations,
+      paginatedStations,
+      pagination,
+      currentPage,
       selectedStationId,
       flyToStation,
       registerMapRef,

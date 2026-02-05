@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { cleanStationName } from '../utils';
+import { cleanStationName, paginateItems, parsePageParam } from '../utils';
 
 describe('cleanStationName', () => {
   describe('removes numeric prefixes with dash separator', () => {
@@ -127,6 +127,137 @@ describe('cleanStationName', () => {
 
     it('should handle multiple dashes in name', () => {
       expect(cleanStationName('10 - San José - Centro')).toBe('San José - Centro');
+    });
+  });
+});
+
+describe('paginateItems', () => {
+  const testItems = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'];
+
+  describe('basic pagination', () => {
+    it('should return first page with correct items', () => {
+      const result = paginateItems(testItems, 1, 5);
+      expect(result.items).toEqual(['a', 'b', 'c', 'd', 'e']);
+      expect(result.pagination.currentPage).toBe(1);
+      expect(result.pagination.totalPages).toBe(3);
+      expect(result.pagination.totalItems).toBe(12);
+    });
+
+    it('should return second page with correct items', () => {
+      const result = paginateItems(testItems, 2, 5);
+      expect(result.items).toEqual(['f', 'g', 'h', 'i', 'j']);
+      expect(result.pagination.currentPage).toBe(2);
+    });
+
+    it('should return last page with remaining items', () => {
+      const result = paginateItems(testItems, 3, 5);
+      expect(result.items).toEqual(['k', 'l']);
+      expect(result.pagination.currentPage).toBe(3);
+    });
+  });
+
+  describe('pagination info', () => {
+    it('should calculate correct startIndex and endIndex (1-indexed for display)', () => {
+      const result = paginateItems(testItems, 2, 5);
+      expect(result.pagination.startIndex).toBe(6); // 1-indexed
+      expect(result.pagination.endIndex).toBe(10);
+    });
+
+    it('should handle last page endIndex correctly', () => {
+      const result = paginateItems(testItems, 3, 5);
+      expect(result.pagination.startIndex).toBe(11);
+      expect(result.pagination.endIndex).toBe(12);
+    });
+
+    it('should return pageSize in pagination info', () => {
+      const result = paginateItems(testItems, 1, 5);
+      expect(result.pagination.pageSize).toBe(5);
+    });
+  });
+
+  describe('edge cases', () => {
+    it('should clamp page to 1 if page is less than 1', () => {
+      const result = paginateItems(testItems, 0, 5);
+      expect(result.pagination.currentPage).toBe(1);
+      expect(result.items).toEqual(['a', 'b', 'c', 'd', 'e']);
+    });
+
+    it('should clamp page to max if page exceeds total pages', () => {
+      const result = paginateItems(testItems, 100, 5);
+      expect(result.pagination.currentPage).toBe(3);
+      expect(result.items).toEqual(['k', 'l']);
+    });
+
+    it('should handle empty array', () => {
+      const result = paginateItems([], 1, 5);
+      expect(result.items).toEqual([]);
+      expect(result.pagination.currentPage).toBe(1);
+      expect(result.pagination.totalPages).toBe(1);
+      expect(result.pagination.totalItems).toBe(0);
+      expect(result.pagination.startIndex).toBe(0);
+      expect(result.pagination.endIndex).toBe(0);
+    });
+
+    it('should handle single item array', () => {
+      const result = paginateItems(['x'], 1, 10);
+      expect(result.items).toEqual(['x']);
+      expect(result.pagination.totalPages).toBe(1);
+      expect(result.pagination.startIndex).toBe(1);
+      expect(result.pagination.endIndex).toBe(1);
+    });
+
+    it('should use default page size of 10 if not provided', () => {
+      const items = Array.from({ length: 25 }, (_, i) => i);
+      const result = paginateItems(items, 1);
+      expect(result.items.length).toBe(10);
+      expect(result.pagination.pageSize).toBe(10);
+      expect(result.pagination.totalPages).toBe(3);
+    });
+  });
+});
+
+describe('parsePageParam', () => {
+  describe('valid inputs', () => {
+    it('should parse valid page number string', () => {
+      expect(parsePageParam('5')).toBe(5);
+    });
+
+    it('should parse "1" as 1', () => {
+      expect(parsePageParam('1')).toBe(1);
+    });
+
+    it('should parse large numbers', () => {
+      expect(parsePageParam('999')).toBe(999);
+    });
+  });
+
+  describe('invalid inputs', () => {
+    it('should return 1 for null', () => {
+      expect(parsePageParam(null)).toBe(1);
+    });
+
+    it('should return 1 for empty string', () => {
+      expect(parsePageParam('')).toBe(1);
+    });
+
+    it('should return 1 for non-numeric string', () => {
+      expect(parsePageParam('abc')).toBe(1);
+    });
+
+    it('should return 1 for negative numbers', () => {
+      expect(parsePageParam('-5')).toBe(1);
+    });
+
+    it('should return 1 for zero', () => {
+      expect(parsePageParam('0')).toBe(1);
+    });
+
+    it('should return 1 for decimal strings', () => {
+      expect(parsePageParam('2.5')).toBe(2); // parseInt behavior
+    });
+
+    it('should handle mixed strings by parsing the leading number', () => {
+      expect(parsePageParam('3abc')).toBe(3); // parseInt behavior
     });
   });
 });

@@ -103,7 +103,6 @@ export interface MapPopupProps {
   onClose: () => void;
 }
 
-// ============================================
 // Geolocation Types
 // ============================================
 
@@ -119,3 +118,21 @@ export type GeolocationError =
   | 'POSITION_UNAVAILABLE'
   | 'TIMEOUT'
   | 'NOT_SUPPORTED';
+
+// ============================================
+// Pagination Types
+// ============================================
+
+export interface PaginationInfo {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  pageSize: number;
+  startIndex: number; // 1-indexed for display
+  endIndex: number;
+}
+
+export interface PaginatedResult<T> {
+  items: T[];
+  pagination: PaginationInfo;
+}

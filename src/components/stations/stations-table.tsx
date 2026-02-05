@@ -2,10 +2,19 @@
 
 import { useCallback } from 'react';
 import { StationRow } from './station-row';
+import { Pagination } from '@/components/ui/pagination';
 import { useStationsSync } from '@/contexts/stations-sync-context';
+import { STATIONS_SCROLL_CONTAINER_ID } from '@/components/layout/sidebar-station';
 
 export function StationsTable() {
-  const { sortedStations, flyToStation, selectedStationId } = useStationsSync();
+  const {
+    sortedStations,
+    paginatedStations,
+    pagination,
+    setCurrentPage,
+    flyToStation,
+    selectedStationId,
+  } = useStationsSync();
 
   const handleStationClick = useCallback(
     (stationId: string) => {
@@ -55,7 +64,7 @@ export function StationsTable() {
           </tr>
         </thead>
         <tbody>
-          {sortedStations.map((station) => (
+          {paginatedStations.map((station) => (
             <StationRow
               key={station.id}
               station={station}
@@ -65,6 +74,17 @@ export function StationsTable() {
           ))}
         </tbody>
       </table>
+
+      {/* Pagination */}
+      {pagination.totalPages > 1 && (
+        <Pagination
+          pagination={pagination}
+          onPageChange={setCurrentPage}
+          variant="dark"
+          className="mt-4 pb-4"
+          scrollContainerId={STATIONS_SCROLL_CONTAINER_ID}
+        />
+      )}
     </div>
   );
 }

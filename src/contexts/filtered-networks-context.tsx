@@ -3,13 +3,17 @@
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { filterNetworks } from '@/lib/api/networks';
-import type { Network } from '@/types';
+import { paginateItems, parsePageParam } from '@/lib/utils';
+import type { Network, PaginationInfo } from '@/types';
 
 interface FilteredNetworksContextValue {
   networks: Network[];
   filteredNetworks: Network[];
+  paginatedNetworks: Network[];
+  pagination: PaginationInfo;
   searchValue: string;
   countryValue: string;
+  currentPage: number;
 }
 
 const FilteredNetworksContext = createContext<FilteredNetworksContextValue | null>(null);
@@ -24,6 +28,7 @@ export function FilteredNetworksProvider({ networks, children }: FilteredNetwork
 
   const searchValue = searchParams.get('search') || '';
   const countryValue = searchParams.get('country') || '';
+  const currentPage = parsePageParam(searchParams.get('page'));
 
   const filteredNetworks = useMemo(() => {
     if (!countryValue && !searchValue) {
@@ -36,14 +41,29 @@ export function FilteredNetworksProvider({ networks, children }: FilteredNetwork
     });
   }, [networks, countryValue, searchValue]);
 
+  const { items: paginatedNetworks, pagination } = useMemo(() => {
+    return paginateItems(filteredNetworks, currentPage);
+  }, [filteredNetworks, currentPage]);
+
   const value = useMemo(
     () => ({
       networks,
       filteredNetworks,
+      paginatedNetworks,
+      pagination,
       searchValue,
       countryValue,
+      currentPage,
     }),
-    [networks, filteredNetworks, searchValue, countryValue]
+    [
+      networks,
+      filteredNetworks,
+      paginatedNetworks,
+      pagination,
+      searchValue,
+      countryValue,
+      currentPage,
+    ]
   );
 
   return (
