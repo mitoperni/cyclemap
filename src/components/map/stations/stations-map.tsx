@@ -1,27 +1,73 @@
 'use client';
 
-import { useRef, useCallback, useState } from 'react';
+import { useCallback, useState, useEffect, useMemo } from 'react';
 import Map, { NavigationControl } from 'react-map-gl/mapbox';
 import type { MapRef, ErrorEvent } from 'react-map-gl/mapbox';
 import { StationClusterMarkers } from './station-cluster-markers';
 import { StationPopup } from './station-popup';
 import { MapError } from '../map-error';
+import { useStationsSync } from '@/contexts/stations-sync-context';
 import { MAP_CONFIG, MAPBOX_CONFIG } from '@/lib/constants';
 import type { Station } from '@/types';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 interface StationsMapProps {
-  stations: Station[];
   center: { latitude: number; longitude: number };
 }
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-export function StationsMap({ stations, center }: StationsMapProps) {
-  const mapRef = useRef<MapRef>(null);
-  const [selectedStation, setSelectedStation] = useState<Station | null>(null);
+export function StationsMap({ center }: StationsMapProps) {
+  const { stations, registerMapRef, updateMapCenter, selectedStationId, clearSelection } =
+    useStationsSync();
+
+  const [mapInstance, setMapInstance] = useState<MapRef | null>(null);
+  const [mapClickedStationId, setMapClickedStationId] = useState<string | null>(null);
   const [mapError, setMapError] = useState<string | null>(null);
+
+  // Callback ref to capture the map instance
+  const mapRefCallback = useCallback(
+    (ref: MapRef | null) => {
+      if (ref) {
+        setMapInstance(ref);
+        registerMapRef(ref);
+      }
+    },
+    [registerMapRef]
+  );
+
+  // Create station lookup for quick access
+  const stationLookup = useMemo(() => {
+    const lookup = new globalThis.Map<string, Station>();
+    stations.forEach((s) => lookup.set(s.id, s));
+    return lookup;
+  }, [stations]);
+
+  // Derive selected station - sidebar selection takes priority over map click
+  const selectedStation = useMemo(() => {
+    const idToUse = selectedStationId || mapClickedStationId;
+    if (!idToUse) return null;
+    return stationLookup.get(idToUse) || null;
+  }, [selectedStationId, mapClickedStationId, stationLookup]);
+
+  // Update map center on moveend
+  useEffect(() => {
+    if (!mapInstance) return;
+
+    const handleMoveEnd = () => {
+      const mapCenter = mapInstance.getCenter();
+      updateMapCenter({
+        latitude: mapCenter.lat,
+        longitude: mapCenter.lng,
+      });
+    };
+
+    mapInstance.on('moveend', handleMoveEnd);
+    return () => {
+      mapInstance.off('moveend', handleMoveEnd);
+    };
+  }, [mapInstance, updateMapCenter]);
 
   const handleMapError = useCallback((e: ErrorEvent) => {
     const errorMessage = e.error?.message || '';
@@ -33,19 +79,19 @@ export function StationsMap({ stations, center }: StationsMapProps) {
   }, []);
 
   const handleStationClick = useCallback((station: Station) => {
-    setSelectedStation(station);
+    setMapClickedStationId(station.id);
   }, []);
 
   const handleClosePopup = useCallback(() => {
-    setSelectedStation(null);
-  }, []);
+    setMapClickedStationId(null);
+    clearSelection();
+  }, [clearSelection]);
 
   const handleMapClick = useCallback(() => {
-    // Close popup when clicking on the map (not on a marker)
-    setSelectedStation(null);
-  }, []);
+    setMapClickedStationId(null);
+    clearSelection();
+  }, [clearSelection]);
 
-  // Validate token before rendering
   if (!MAPBOX_TOKEN) {
     return (
       <MapError
@@ -61,7 +107,7 @@ export function StationsMap({ stations, center }: StationsMapProps) {
 
   return (
     <Map
-      ref={mapRef}
+      ref={mapRefCallback}
       reuseMaps={true}
       mapboxAccessToken={MAPBOX_TOKEN}
       initialViewState={{
@@ -79,14 +125,12 @@ export function StationsMap({ stations, center }: StationsMapProps) {
     >
       <NavigationControl position="bottom-right" showCompass={false} />
 
-      {/* Station cluster markers */}
       <StationClusterMarkers
         stations={stations}
         selectedStation={selectedStation}
         onStationClick={handleStationClick}
       />
 
-      {/* Popup for selected station */}
       {selectedStation && <StationPopup station={selectedStation} onClose={handleClosePopup} />}
     </Map>
   );

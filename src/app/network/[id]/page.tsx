@@ -1,11 +1,10 @@
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
-import { StationsHeader } from '@/components/stations/stations-header';
-import { StationsTable } from '@/components/stations/stations-table';
 import { StationsTableSkeleton } from '@/components/stations/stations-table-skeleton';
-import { StationsMapContainer, MapSkeleton } from '@/components/map';
+import { MapSkeleton } from '@/components/map';
 import { fetchNetworkDetail } from '@/lib/api/network-detail';
 import { SidebarStation } from '@/components/layout/sidebar-station';
+import { NetworkDetailClient } from './network-detail-client';
 
 interface NetworkDetailPageProps {
   params: Promise<{ id: string }>;
@@ -27,37 +26,14 @@ export async function generateMetadata({ params }: NetworkDetailPageProps) {
   }
 }
 
-async function NetworkContent({ id }: { id: string }) {
+async function NetworkData({ id }: { id: string }) {
   const network = await fetchNetworkDetail(id);
 
   if (!network) {
     notFound();
   }
 
-  return (
-    <>
-      <StationsHeader network={network} />
-      <StationsTable stations={network.stations} />
-    </>
-  );
-}
-
-async function NetworkMap({ id }: { id: string }) {
-  const network = await fetchNetworkDetail(id);
-
-  if (!network) {
-    return null;
-  }
-
-  return (
-    <StationsMapContainer
-      stations={network.stations}
-      center={{
-        latitude: network.location.latitude,
-        longitude: network.location.longitude,
-      }}
-    />
-  );
+  return <NetworkDetailClient network={network} />;
 }
 
 export default async function NetworkDetailPage({ params }: NetworkDetailPageProps) {
@@ -65,17 +41,20 @@ export default async function NetworkDetailPage({ params }: NetworkDetailPagePro
 
   return (
     <div className="flex h-screen flex-col lg:flex-row">
-      <SidebarStation>
-        <Suspense fallback={<StationsTableSkeleton />}>
-          <NetworkContent id={id} />
-        </Suspense>
-      </SidebarStation>
-
-      <main className="relative min-h-[300px] flex-1 lg:min-h-0">
-        <Suspense fallback={<MapSkeleton />}>
-          <NetworkMap id={id} />
-        </Suspense>
-      </main>
+      <Suspense
+        fallback={
+          <>
+            <SidebarStation>
+              <StationsTableSkeleton />
+            </SidebarStation>
+            <main className="relative min-h-[300px] flex-1 lg:min-h-0">
+              <MapSkeleton />
+            </main>
+          </>
+        }
+      >
+        <NetworkData id={id} />
+      </Suspense>
     </div>
   );
 }
