@@ -1,13 +1,17 @@
 'use client';
 
 import { AlertCircle, MapPin } from 'lucide-react';
-import type { Network } from '@/types';
+import type { Network, Station } from '@/types';
 
 interface MapPlaceholderProps {
-  networks: Network[];
+  networks?: Network[];
+  stations?: Station[];
 }
 
-export function MapPlaceholder({ networks }: MapPlaceholderProps) {
+export function MapPlaceholder({ networks, stations }: MapPlaceholderProps) {
+  const count = networks?.length ?? stations?.length ?? 0;
+  const label = networks ? 'networks' : 'stations';
+
   return (
     <div className="flex h-full w-full flex-col items-center justify-center bg-torea-bay-50">
       {/* Dev mode indicator */}
@@ -27,11 +31,11 @@ export function MapPlaceholder({ networks }: MapPlaceholderProps) {
           </p>
         </div>
 
-        {/* Network count */}
+        {/* Count indicator */}
         <div className="mt-4 flex items-center gap-2 rounded-full bg-white px-4 py-2 shadow-sm">
           <MapPin className="h-4 w-4 text-grenadier-500" />
           <span className="text-sm font-medium text-torea-bay-700">
-            {networks.length} networks available
+            {count} {label} available
           </span>
         </div>
       </div>

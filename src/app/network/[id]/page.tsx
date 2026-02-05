@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { StationsHeader } from '@/components/stations/stations-header';
 import { StationsTable } from '@/components/stations/stations-table';
 import { StationsTableSkeleton } from '@/components/stations/stations-table-skeleton';
+import { StationsMapContainer, MapSkeleton } from '@/components/map';
 import { fetchNetworkDetail } from '@/lib/api/network-detail';
 import { SidebarStation } from '@/components/layout/sidebar-station';
 
@@ -41,6 +42,24 @@ async function NetworkContent({ id }: { id: string }) {
   );
 }
 
+async function NetworkMap({ id }: { id: string }) {
+  const network = await fetchNetworkDetail(id);
+
+  if (!network) {
+    return null;
+  }
+
+  return (
+    <StationsMapContainer
+      stations={network.stations}
+      center={{
+        latitude: network.location.latitude,
+        longitude: network.location.longitude,
+      }}
+    />
+  );
+}
+
 export default async function NetworkDetailPage({ params }: NetworkDetailPageProps) {
   const { id } = await params;
 
@@ -53,10 +72,9 @@ export default async function NetworkDetailPage({ params }: NetworkDetailPagePro
       </SidebarStation>
 
       <main className="relative min-h-[300px] flex-1 lg:min-h-0">
-        {/* Map will be added in PR #8 */}
-        <div className="flex h-full items-center justify-center bg-torea-bay-50">
-          <p className="text-torea-bay-400">Station map coming in next PR</p>
-        </div>
+        <Suspense fallback={<MapSkeleton />}>
+          <NetworkMap id={id} />
+        </Suspense>
       </main>
     </div>
   );

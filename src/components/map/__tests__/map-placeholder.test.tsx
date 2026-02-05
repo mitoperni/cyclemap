@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MapPlaceholder } from '../map-placeholder';
-import type { Network } from '@/types';
+import type { Network, Station } from '@/types';
 
 const mockNetworks: Network[] = [
   {
@@ -91,6 +91,41 @@ describe('MapPlaceholder', () => {
 
       const heading = screen.getByRole('heading', { level: 3 });
       expect(heading).toHaveTextContent('Development Mode');
+    });
+  });
+
+  describe('with stations', () => {
+    const mockStations: Station[] = [
+      {
+        id: 'station-1',
+        name: 'Station A',
+        latitude: 41.3851,
+        longitude: 2.1734,
+        free_bikes: 5,
+        empty_slots: 10,
+        timestamp: '2024-01-01T00:00:00Z',
+      },
+      {
+        id: 'station-2',
+        name: 'Station B',
+        latitude: 41.3861,
+        longitude: 2.1744,
+        free_bikes: 3,
+        empty_slots: 12,
+        timestamp: '2024-01-01T00:00:00Z',
+      },
+    ];
+
+    it('should render station count', () => {
+      render(<MapPlaceholder stations={mockStations} />);
+
+      expect(screen.getByText('2 stations available')).toBeInTheDocument();
+    });
+
+    it('should show zero for empty stations array', () => {
+      render(<MapPlaceholder stations={[]} />);
+
+      expect(screen.getByText('0 stations available')).toBeInTheDocument();
     });
   });
 });

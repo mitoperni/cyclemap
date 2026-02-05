@@ -8,7 +8,7 @@ export const CACHE_TIMES = {
 export const MAP_CONFIG = {
   DEFAULT_CENTER: { lat: 40.4168, lng: -3.7038 }, // Madrid
   DEFAULT_ZOOM: 2,
-  DETAIL_ZOOM: 13,
+  DETAIL_ZOOM: 11,
   MIN_ZOOM: 1,
   MAX_ZOOM: 18,
   FIT_BOUNDS_PADDING: 50,
