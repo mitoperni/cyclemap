@@ -1,7 +1,10 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    // Limit concurrent page generation to avoid API rate limits
+    staticGenerationMaxConcurrency: 3,
+  },
 };
 
 export default nextConfig;

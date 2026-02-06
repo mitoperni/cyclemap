@@ -1,3 +1,8 @@
+export const BASE_URL = (process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000').replace(
+  /\/$/,
+  ''
+);
+
 export const API_BASE = 'https://api.citybik.es/v2';
 
 export const CACHE_TIMES = {
@@ -86,3 +91,48 @@ export const GEOLOCATION_CONFIG = {
 export const BREAKPOINTS = {
   XL: 1280, // Sidebar collapses below this width
 } as const;
+
+// Top popular bike sharing networks worldwide (2025-2026 data)
+// Used for static generation at build time
+export const POPULAR_NETWORK_IDS = [
+  // North America
+  'citi-bike-nyc',
+  'capital-bikeshare',
+  'divvy',
+  'bay-wheels',
+  'blue-bikes',
+  'bixi-toronto',
+  'citi-bike-miami',
+  'indego',
+  'biketown',
+  'mobibikes',
+  'ecobici',
+  // Europe - Western
+  'velib',
+  'santander-cycles',
+  'bicimad',
+  'bicing',
+  'bikemi',
+  'velov',
+  'velo-antwerpen',
+  'dublinbikes',
+  'gira',
+  'valenbisi',
+  // Europe - Central & Northern
+  'citybikes-helsinki',
+  'oslo-bysykkel',
+  'bubi',
+  // Asia-Pacific
+  'youbike-taipei',
+  'youbike-new-taipei',
+  'docomo-cycle-tokyo',
+  'docomo-cycle-osaka',
+  'docomo-cycle-kyoto',
+  'seoul-bike',
+  'telofun',
+  // Latin America
+  'ecobici-buenos-aires',
+  'bikesantiago',
+  'bikerio',
+  'citybike-lima',
+] as const;

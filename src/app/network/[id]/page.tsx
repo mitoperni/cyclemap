@@ -2,12 +2,17 @@ import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { fetchNetworkDetail } from '@/lib/api/network-detail';
+import { BASE_URL, POPULAR_NETWORK_IDS } from '@/lib/constants';
 import { NetworkDetailClient } from './network-detail-client';
 import { GeolocationProvider } from '@/contexts';
 import { JsonLd } from '@/components/seo/json-ld';
 import { NetworkWithStations } from '@/types';
 
-const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000').replace(/\/$/, '');
+export async function generateStaticParams() {
+  return POPULAR_NETWORK_IDS.map((id) => ({ id }));
+}
+
+export const dynamicParams = true;
 
 interface NetworkDetailPageProps {
   params: Promise<{ id: string }>;
@@ -32,11 +37,11 @@ export async function generateMetadata({ params }: NetworkDetailPageProps): Prom
         title,
         description,
         type: 'website',
-        url: `${baseUrl}/network/${id}`,
+        url: `${BASE_URL}/network/${id}`,
         siteName: 'CycleMap',
         images: [
           {
-            url: `${baseUrl}/stations_header.jpg`,
+            url: `${BASE_URL}/stations_header.jpg`,
             width: 1102,
             height: 734,
             alt: title,
@@ -47,10 +52,10 @@ export async function generateMetadata({ params }: NetworkDetailPageProps): Prom
         card: 'summary_large_image',
         title,
         description,
-        images: [`${baseUrl}/stations_header.jpg`],
+        images: [`${BASE_URL}/stations_header.jpg`],
       },
       alternates: {
-        canonical: `${baseUrl}/network/${id}`,
+        canonical: `${BASE_URL}/network/${id}`,
       },
     };
   } catch {
