@@ -1,6 +1,5 @@
 import type { NetworkWithStations } from '@/types';
-
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+import { BASE_URL } from '@/lib/constants';
 
 interface JsonLdProps {
   network?: NetworkWithStations;
@@ -14,7 +13,7 @@ export function JsonLd({ network }: JsonLdProps) {
     applicationCategory: 'TravelApplication',
     operatingSystem: 'Web',
     description: 'Explore bicycle sharing networks around the world',
-    url: baseUrl,
+    url: BASE_URL,
     offers: {
       '@type': 'Offer',
       price: '0',
@@ -26,7 +25,7 @@ export function JsonLd({ network }: JsonLdProps) {
     ? {
         '@context': 'https://schema.org',
         '@type': 'LocalBusiness',
-        '@id': `${baseUrl}/network/${network.id}`,
+        '@id': `${BASE_URL}/network/${network.id}`,
         name: network.name,
         description: `Bike sharing network in ${network.location.city}, ${network.location.country}`,
         address: {
@@ -39,7 +38,7 @@ export function JsonLd({ network }: JsonLdProps) {
           latitude: network.location.latitude,
           longitude: network.location.longitude,
         },
-        url: `${baseUrl}/network/${network.id}`,
+        url: `${BASE_URL}/network/${network.id}`,
       }
     : null;
 

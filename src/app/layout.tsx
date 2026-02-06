@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import './globals.css';
 import { JsonLd } from '@/components/seo/json-ld';
+import { BASE_URL } from '@/lib/constants';
 
 const poppins = Poppins({
   variable: '--font-poppins',
@@ -9,10 +10,8 @@ const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
 });
 
-const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000').replace(/\/$/, '');
-
 export const metadata: Metadata = {
-  metadataBase: new URL(baseUrl),
+  metadataBase: new URL(BASE_URL),
   title: {
     default: 'CycleMap - Bicycle Sharing Networks Worldwide',
     template: '%s | CycleMap',
@@ -46,14 +45,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: baseUrl,
+    url: BASE_URL,
     siteName: 'CycleMap',
     title: 'CycleMap - Bicycle Sharing Networks Worldwide',
     description:
       'Explore and discover bicycle sharing networks around the world. Find bike stations and plan your ride.',
     images: [
       {
-        url: `${baseUrl}/stations_header.jpg`,
+        url: `${BASE_URL}/stations_header.jpg`,
         width: 1102,
         height: 734,
         alt: 'CycleMap - Bicycle Sharing Networks Worldwide',
@@ -65,10 +64,10 @@ export const metadata: Metadata = {
     title: 'CycleMap - Bicycle Sharing Networks Worldwide',
     description:
       'Explore and discover bicycle sharing networks around the world. Find bike stations and plan your ride.',
-    images: [`${baseUrl}/stations_header.jpg`],
+    images: [`${BASE_URL}/stations_header.jpg`],
   },
   alternates: {
-    canonical: baseUrl,
+    canonical: BASE_URL,
   },
 };
 
