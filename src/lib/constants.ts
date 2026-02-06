@@ -75,6 +75,14 @@ export const GEOLOCATION_CONFIG = {
   },
   NETWORK_ZOOM: 11,
   STATION_ZOOM: 16,
+  STORAGE_KEY: 'cyclemap-geolocation-asked',
+  ERROR_MESSAGES: {
+    PERMISSION_DENIED:
+      'Location access was denied. Please enable location permissions in your browser settings.',
+    POSITION_UNAVAILABLE: 'Unable to determine your location. Please try again.',
+    TIMEOUT: 'Location request timed out. Please try again.',
+    NOT_SUPPORTED: 'Geolocation is not supported by your browser.',
+  },
 } as const;
 
 export const BREAKPOINTS = {

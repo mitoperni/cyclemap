@@ -2,6 +2,7 @@ import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import { fetchNetworkDetail } from '@/lib/api/network-detail';
 import { NetworkDetailClient } from './network-detail-client';
+import { GeolocationProvider } from '@/contexts';
 
 interface NetworkDetailPageProps {
   params: Promise<{ id: string }>;
@@ -37,5 +38,9 @@ export default async function NetworkDetailPage({ params }: NetworkDetailPagePro
     notFound();
   }
 
-  return <NetworkDetailClient network={network} />;
+  return (
+    <GeolocationProvider>
+      <NetworkDetailClient network={network} />
+    </GeolocationProvider>
+  );
 }

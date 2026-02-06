@@ -1,15 +1,19 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { NearMeButton } from '../../ui/near-me-button';
+import { useGeolocationContext } from '@/contexts';
 import { GEOLOCATION_CONFIG } from '@/lib/constants';
 
-vi.mock('@/hooks/use-geolocation', () => ({
-  useGeolocation: vi.fn(),
-}));
+// Mock the useGeolocationContext hook
+vi.mock('@/contexts', async () => {
+  const actual = await vi.importActual('@/contexts');
+  return {
+    ...actual,
+    useGeolocationContext: vi.fn(),
+  };
+});
 
-import { useGeolocation } from '@/hooks/use-geolocation';
-
-const mockUseGeolocation = useGeolocation as ReturnType<typeof vi.fn>;
+const mockUseGeolocationContext = useGeolocationContext as ReturnType<typeof vi.fn>;
 
 const createMockMapRef = () => ({
   current: {
@@ -24,7 +28,7 @@ describe('NearMeButton', () => {
 
   describe('default state', () => {
     it('should render location button', () => {
-      mockUseGeolocation.mockReturnValue({
+      mockUseGeolocationContext.mockReturnValue({
         position: null,
         isLoading: false,
         error: null,
@@ -41,7 +45,7 @@ describe('NearMeButton', () => {
 
     it('should call requestLocation when clicked', () => {
       const requestLocation = vi.fn();
-      mockUseGeolocation.mockReturnValue({
+      mockUseGeolocationContext.mockReturnValue({
         position: null,
         isLoading: false,
         error: null,
@@ -60,7 +64,7 @@ describe('NearMeButton', () => {
 
   describe('loading state', () => {
     it('should show loading spinner when isLoading is true', () => {
-      mockUseGeolocation.mockReturnValue({
+      mockUseGeolocationContext.mockReturnValue({
         position: null,
         isLoading: true,
         error: null,
@@ -78,7 +82,7 @@ describe('NearMeButton', () => {
 
   describe('error state', () => {
     it('should show error state when there is an error', () => {
-      mockUseGeolocation.mockReturnValue({
+      mockUseGeolocationContext.mockReturnValue({
         position: null,
         isLoading: false,
         error: 'PERMISSION_DENIED',
@@ -96,7 +100,7 @@ describe('NearMeButton', () => {
     it('should clear error and retry when error button is clicked', () => {
       const clearError = vi.fn();
       const requestLocation = vi.fn();
-      mockUseGeolocation.mockReturnValue({
+      mockUseGeolocationContext.mockReturnValue({
         position: null,
         isLoading: false,
         error: 'PERMISSION_DENIED',
@@ -119,7 +123,7 @@ describe('NearMeButton', () => {
       const mapRef = createMockMapRef();
       const position = { latitude: 40.4168, longitude: -3.7038 };
 
-      mockUseGeolocation.mockReturnValue({
+      mockUseGeolocationContext.mockReturnValue({
         position,
         isLoading: false,
         error: null,
@@ -129,6 +133,9 @@ describe('NearMeButton', () => {
       });
 
       render(<NearMeButton mapRef={mapRef as never} />);
+
+      // Click the button to trigger flyTo
+      fireEvent.click(screen.getByRole('button'));
 
       await waitFor(() => {
         expect(mapRef.current.flyTo).toHaveBeenCalledWith({
@@ -144,7 +151,7 @@ describe('NearMeButton', () => {
       const mapRef = createMockMapRef();
       const position = { latitude: 40.4168, longitude: -3.7038 };
 
-      mockUseGeolocation.mockReturnValue({
+      mockUseGeolocationContext.mockReturnValue({
         position,
         isLoading: false,
         error: null,
@@ -154,6 +161,9 @@ describe('NearMeButton', () => {
       });
 
       render(<NearMeButton mapRef={mapRef as never} zoom={GEOLOCATION_CONFIG.STATION_ZOOM} />);
+
+      // Click the button to trigger flyTo
+      fireEvent.click(screen.getByRole('button'));
 
       await waitFor(() => {
         expect(mapRef.current.flyTo).toHaveBeenCalledWith({
@@ -168,7 +178,7 @@ describe('NearMeButton', () => {
     it('should not call flyTo when position is null', () => {
       const mapRef = createMockMapRef();
 
-      mockUseGeolocation.mockReturnValue({
+      mockUseGeolocationContext.mockReturnValue({
         position: null,
         isLoading: false,
         error: null,
@@ -186,7 +196,7 @@ describe('NearMeButton', () => {
       const mapRef = { current: null };
       const position = { latitude: 40.4168, longitude: -3.7038 };
 
-      mockUseGeolocation.mockReturnValue({
+      mockUseGeolocationContext.mockReturnValue({
         position,
         isLoading: false,
         error: null,
@@ -202,7 +212,7 @@ describe('NearMeButton', () => {
 
   describe('accessibility', () => {
     it('should have accessible button in default state', () => {
-      mockUseGeolocation.mockReturnValue({
+      mockUseGeolocationContext.mockReturnValue({
         position: null,
         isLoading: false,
         error: null,
@@ -218,7 +228,7 @@ describe('NearMeButton', () => {
     });
 
     it('should have title attribute with error message in error state', () => {
-      mockUseGeolocation.mockReturnValue({
+      mockUseGeolocationContext.mockReturnValue({
         position: null,
         isLoading: false,
         error: 'PERMISSION_DENIED',
@@ -236,7 +246,7 @@ describe('NearMeButton', () => {
 
   describe('className prop', () => {
     it('should apply custom className', () => {
-      mockUseGeolocation.mockReturnValue({
+      mockUseGeolocationContext.mockReturnValue({
         position: null,
         isLoading: false,
         error: null,

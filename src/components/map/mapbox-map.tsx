@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useCallback, useState } from 'react';
+import { useRef, useCallback, useState, useEffect } from 'react';
 import Map, { NavigationControl } from 'react-map-gl/mapbox';
 import type { MapRef, ErrorEvent, MapMouseEvent } from 'react-map-gl/mapbox';
 import type { GeoJSONSource } from 'mapbox-gl';
@@ -9,6 +9,7 @@ import { ClusterMarkers } from './cluster-markers';
 import { MapError } from './map-error';
 import { useFitBounds } from '@/hooks/use-fit-bounds';
 import { useMapLanguage } from '@/hooks/use-map-language';
+import { useGeolocationContext } from '@/contexts';
 import { MAP_CONFIG, MAPBOX_CONFIG, CLUSTER_CONFIG, GEOLOCATION_CONFIG } from '@/lib/constants';
 import type { Network } from '@/types';
 
@@ -29,12 +30,27 @@ export function MapboxMap({ networks }: MapboxMapProps) {
   const [mapInstance, setMapInstance] = useState<MapRef | null>(null);
   const router = useRouter();
   const [mapError, setMapError] = useState<string | null>(null);
+  const { position: userPosition } = useGeolocationContext();
+  const hasAutoFlyRef = useRef(false);
 
   // Auto-fit bounds when networks change
   useFitBounds(mapRef, networks);
 
   // Set map labels to English
   useMapLanguage(mapInstance);
+
+  // Auto-fly to user location on first position detection
+  useEffect(() => {
+    if (!mapInstance || !userPosition || hasAutoFlyRef.current) return;
+
+    hasAutoFlyRef.current = true;
+    mapInstance.flyTo({
+      center: [userPosition.longitude, userPosition.latitude],
+      zoom: GEOLOCATION_CONFIG.NETWORK_ZOOM,
+      duration: MAP_CONFIG.ANIMATION_DURATION,
+      essential: true,
+    });
+  }, [mapInstance, userPosition]);
 
   const handleMapError = useCallback((e: ErrorEvent) => {
     const errorMessage = e.error?.message || '';
