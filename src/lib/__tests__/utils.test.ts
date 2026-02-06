@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { cleanStationName, paginateItems, parsePageParam } from '../utils';
+import { cleanStationName, paginateItems, parsePageParam, getAriaSort } from '../utils';
 
 describe('cleanStationName', () => {
   describe('removes numeric prefixes with dash separator', () => {
@@ -75,8 +75,8 @@ describe('cleanStationName', () => {
       expect(cleanStationName('ABCD - Four Letter Code')).toBe('Four Letter Code');
     });
 
-    it('should not remove longer prefixes like "ABCDE - Station"', () => {
-      expect(cleanStationName('ABCDE - Station')).toBe('ABCDE - Station');
+    it('should remove alphanumeric prefixes like "ABCDE - Station"', () => {
+      expect(cleanStationName('ABCDE - Station')).toBe('Station');
     });
   });
 
@@ -121,8 +121,8 @@ describe('cleanStationName', () => {
       expect(cleanStationName('42 - ')).toBe('');
     });
 
-    it('should not remove single letter at the start', () => {
-      expect(cleanStationName('A - Station')).toBe('A - Station');
+    it('should remove single letter prefix at the start', () => {
+      expect(cleanStationName('A - Station')).toBe('Station');
     });
 
     it('should handle multiple dashes in name', () => {
@@ -259,5 +259,34 @@ describe('parsePageParam', () => {
     it('should handle mixed strings by parsing the leading number', () => {
       expect(parsePageParam('3abc')).toBe(3); // parseInt behavior
     });
+  });
+});
+
+describe('getAriaSort', () => {
+  it('should return "none" when columnSort is null', () => {
+    expect(getAriaSort(null, 'free_bikes')).toBe('none');
+  });
+
+  it('should return "none" when field does not match', () => {
+    expect(getAriaSort({ field: 'empty_slots', direction: 'desc' }, 'free_bikes')).toBe('none');
+  });
+
+  it('should return "descending" when field matches and direction is desc', () => {
+    expect(getAriaSort({ field: 'free_bikes', direction: 'desc' }, 'free_bikes')).toBe(
+      'descending'
+    );
+  });
+
+  it('should return "ascending" when field matches and direction is asc', () => {
+    expect(getAriaSort({ field: 'free_bikes', direction: 'asc' }, 'free_bikes')).toBe('ascending');
+  });
+
+  it('should work with empty_slots field', () => {
+    expect(getAriaSort({ field: 'empty_slots', direction: 'asc' }, 'empty_slots')).toBe(
+      'ascending'
+    );
+    expect(getAriaSort({ field: 'empty_slots', direction: 'desc' }, 'empty_slots')).toBe(
+      'descending'
+    );
   });
 });

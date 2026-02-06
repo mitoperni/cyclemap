@@ -63,7 +63,7 @@ export interface NetworkFilters {
 export type SortDirection = 'asc' | 'desc';
 
 export interface StationSort {
-  field: 'free_bikes' | 'empty_slots' | 'name';
+  field: 'free_bikes' | 'empty_slots';
   direction: SortDirection;
 }
 

@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import type { Network, PaginatedResult } from '@/types';
+import type { Network, PaginatedResult, StationSort } from '@/types';
 import countriesData from '@/data/countries.json';
 import { PAGINATION } from './constants';
 
@@ -29,8 +29,8 @@ export function getUniqueCountries(networks: Network[]): string[] {
 export function cleanStationName(name: string): string {
   let cleaned = name.trim();
 
-  // Remove leading numeric prefixes (e.g., "001 - Station Name")
-  cleaned = cleaned.replace(/^\d+[\s\-\.]+\s*/, '');
+  // Remove leading alphanumeric prefixes (e.g., "001 - Station Name", "25A - Plaza de Celenque A")
+  cleaned = cleaned.replace(/^[A-Z0-9]+[\s\-\.]+\s*/, '');
 
   // Remove leading short code prefixes (e.g., "AUH - Marina Mall Signal")
   cleaned = cleaned.replace(/^[A-Z]{2,4}\s*-\s*/, '');
@@ -127,4 +127,15 @@ export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2
       Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
+}
+
+/**
+ * Get aria-sort attribute value for a sortable column header
+ */
+export function getAriaSort(
+  columnSort: StationSort | null,
+  field: StationSort['field']
+): 'none' | 'ascending' | 'descending' {
+  if (columnSort?.field !== field) return 'none';
+  return columnSort.direction === 'asc' ? 'ascending' : 'descending';
 }
