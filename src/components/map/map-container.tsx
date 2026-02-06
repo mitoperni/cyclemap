@@ -23,5 +23,9 @@ export function MapContainer() {
     return <MapPlaceholder networks={filteredNetworks} />;
   }
 
-  return <MapboxMap networks={filteredNetworks} />;
+  return (
+    <div className="absolute inset-0">
+      <MapboxMap networks={filteredNetworks} />
+    </div>
+  );
 }

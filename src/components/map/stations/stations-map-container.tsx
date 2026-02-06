@@ -26,5 +26,9 @@ export function StationsMapContainer({ center }: StationsMapContainerProps) {
     return <MapPlaceholder stations={stations} />;
   }
 
-  return <StationsMap center={center} />;
+  return (
+    <div className="absolute inset-0">
+      <StationsMap center={center} />
+    </div>
+  );
 }
