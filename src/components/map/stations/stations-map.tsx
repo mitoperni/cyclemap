@@ -28,6 +28,8 @@ export function StationsMap({ center }: StationsMapProps) {
   const [mapClickedStationId, setMapClickedStationId] = useState<string | null>(null);
   const [mapError, setMapError] = useState<string | null>(null);
   const nearMeMapRef = useRef<MapRef | null>(null);
+  // Track if a station was just clicked to prevent map click from clearing selection
+  const stationClickedRef = useRef(false);
 
   // Set map labels to English
   useMapLanguage(mapInstance);
@@ -86,6 +88,8 @@ export function StationsMap({ center }: StationsMapProps) {
   }, []);
 
   const handleStationClick = useCallback((station: Station) => {
+    // Set flag to prevent map click handler from clearing the selection
+    stationClickedRef.current = true;
     setMapClickedStationId(station.id);
   }, []);
 
@@ -95,6 +99,12 @@ export function StationsMap({ center }: StationsMapProps) {
   }, [clearSelection]);
 
   const handleMapClick = useCallback(() => {
+    // If a station was just clicked, don't clear the selection
+    // This is needed because react-map-gl doesn't stop event propagation from Markers
+    if (stationClickedRef.current) {
+      stationClickedRef.current = false;
+      return;
+    }
     setMapClickedStationId(null);
     clearSelection();
   }, [clearSelection]);
