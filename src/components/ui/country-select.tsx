@@ -56,8 +56,9 @@ export function CountrySelect({
         <button
           type="button"
           className={cn(
-            'flex h-12 w-[114px] items-center justify-between rounded-full border border-torea-bay-200 bg-white px-4 text-base text-torea-bay-800 focus:outline-none focus:ring-2 focus:ring-torea-bay-800 focus:ring-offset-1',
-            open && 'border-torea-bay-400',
+            'flex h-12 w-[114px] items-center justify-between rounded-full border border-torea-bay-200 bg-white px-4 text-base text-torea-bay-800',
+            'transition-colors hover:bg-torea-bay-50 focus:outline-none focus:ring-2 focus:ring-torea-bay-800 focus:ring-offset-1',
+            open && 'border-torea-bay-400 bg-torea-bay-50 ring-2 ring-torea-bay-800 ring-offset-1',
             className
           )}
           aria-label="Select country"
