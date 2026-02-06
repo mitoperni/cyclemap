@@ -11,7 +11,7 @@ import {
   type ReactNode,
 } from 'react';
 import type { MapRef } from 'react-map-gl/mapbox';
-import type { Station, PaginationInfo } from '@/types';
+import type { Station, PaginationInfo, StationSort } from '@/types';
 import { MAP_CONFIG, PAGINATION } from '@/lib/constants';
 import { calculateDistance, paginateItems } from '@/lib/utils';
 
@@ -32,6 +32,8 @@ interface StationsSyncContextValue {
   registerMapRef: (ref: MapRef | null) => void;
   updateMapCenter: (center: MapCenter) => void;
   clearSelection: () => void;
+  columnSort: StationSort | null;
+  handleColumnSort: (field: StationSort['field']) => void;
 }
 
 const StationsSyncContext = createContext<StationsSyncContextValue | null>(null);
@@ -50,6 +52,7 @@ export function StationsSyncProvider({
   const [mapCenter, setMapCenter] = useState<MapCenter>(initialCenter);
   const [selectedStationId, setSelectedStationId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [columnSort, setColumnSort] = useState<StationSort | null>(null);
   const mapRefInternal = useRef<MapRef | null>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -60,24 +63,46 @@ export function StationsSyncProvider({
     return lookup;
   }, [stations]);
 
-  // Sort stations by distance to map center
+  // Sort stations by column or by distance to map center
   const sortedStations = useMemo(() => {
-    return [...stations].sort((a, b) => {
-      const distA = calculateDistance(
-        mapCenter.latitude,
-        mapCenter.longitude,
-        a.latitude,
-        a.longitude
-      );
-      const distB = calculateDistance(
-        mapCenter.latitude,
-        mapCenter.longitude,
-        b.latitude,
-        b.longitude
-      );
-      return distA - distB;
-    });
-  }, [stations, mapCenter]);
+    const sorted = [...stations];
+
+    if (columnSort) {
+      // Manual sorting by column
+      sorted.sort((a, b) => {
+        const { field, direction } = columnSort;
+        const multiplier = direction === 'asc' ? 1 : -1;
+
+        // Handle null values for empty_slots (null goes last always)
+        const aVal = a[field];
+        const bVal = b[field];
+        if (aVal === null && bVal === null) return 0;
+        if (aVal === null) return 1;
+        if (bVal === null) return -1;
+
+        return multiplier * (aVal - bVal);
+      });
+    } else {
+      // Default: sort by distance to map center
+      sorted.sort((a, b) => {
+        const distA = calculateDistance(
+          mapCenter.latitude,
+          mapCenter.longitude,
+          a.latitude,
+          a.longitude
+        );
+        const distB = calculateDistance(
+          mapCenter.latitude,
+          mapCenter.longitude,
+          b.latitude,
+          b.longitude
+        );
+        return distA - distB;
+      });
+    }
+
+    return sorted;
+  }, [stations, mapCenter, columnSort]);
 
   // Paginate sorted stations
   const { items: paginatedStations, pagination } = useMemo(() => {
@@ -121,6 +146,17 @@ export function StationsSyncProvider({
     setSelectedStationId(null);
   }, []);
 
+  const handleColumnSort = useCallback((field: StationSort['field']) => {
+    setColumnSort((prev) => {
+      if (prev?.field === field) {
+        if (prev.direction === 'desc') return { field, direction: 'asc' };
+        return null; // Third click = reset to distance sorting
+      }
+      return { field, direction: 'desc' }; // First click = descending
+    });
+    setCurrentPage(1); // Reset to page 1 when sort changes
+  }, []);
+
   // Cleanup debounce timer on unmount
   useEffect(() => {
     return () => {
@@ -143,6 +179,8 @@ export function StationsSyncProvider({
       registerMapRef,
       updateMapCenter,
       clearSelection,
+      columnSort,
+      handleColumnSort,
     }),
     [
       stations,
@@ -155,6 +193,8 @@ export function StationsSyncProvider({
       registerMapRef,
       updateMapCenter,
       clearSelection,
+      columnSort,
+      handleColumnSort,
     ]
   );
 

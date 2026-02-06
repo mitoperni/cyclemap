@@ -3,8 +3,10 @@
 import { useCallback } from 'react';
 import { StationRow } from './station-row';
 import { Pagination } from '@/components/ui/pagination';
+import { SortIcon } from '@/components/ui/sort-icon';
 import { useStationsSync } from '@/contexts/stations-sync-context';
 import { STATIONS_SCROLL_CONTAINER_ID } from '@/components/layout/sidebar-station';
+import { getAriaSort } from '@/lib/utils';
 
 export function StationsTable() {
   const {
@@ -14,6 +16,8 @@ export function StationsTable() {
     setCurrentPage,
     flyToStation,
     selectedStationId,
+    columnSort,
+    handleColumnSort,
   } = useStationsSync();
 
   const handleStationClick = useCallback(
@@ -55,11 +59,35 @@ export function StationsTable() {
             <th className="p-2 pe-0 h-9 text-left">
               <span className="leading-5">STATION NAME</span>
             </th>
-            <th className="py-2 h-9 w-[130.5px] text-center font-medium">
-              <span className="leading-5">FREE BIKES</span>
+            <th
+              className="py-2 h-9 w-[130.5px] text-center font-medium cursor-pointer hover:text-grenadier-300 transition-colors"
+              onClick={() => handleColumnSort('free_bikes')}
+              onKeyDown={(e) =>
+                (e.key === 'Enter' || e.key === ' ') && handleColumnSort('free_bikes')
+              }
+              tabIndex={0}
+              role="columnheader"
+              aria-sort={getAriaSort(columnSort, 'free_bikes')}
+            >
+              <span className="inline-flex items-center justify-center leading-5">
+                FREE BIKES
+                <SortIcon field="free_bikes" columnSort={columnSort} />
+              </span>
             </th>
-            <th className="p-2 ps-0 h-9 w-[138.5px] text-center font-medium">
-              <span className="leading-5">EMPTY SLOTS</span>
+            <th
+              className="p-2 ps-0 h-9 w-[138.5px] text-center font-medium cursor-pointer hover:text-grenadier-300 transition-colors"
+              onClick={() => handleColumnSort('empty_slots')}
+              onKeyDown={(e) =>
+                (e.key === 'Enter' || e.key === ' ') && handleColumnSort('empty_slots')
+              }
+              tabIndex={0}
+              role="columnheader"
+              aria-sort={getAriaSort(columnSort, 'empty_slots')}
+            >
+              <span className="inline-flex items-center justify-center leading-5">
+                EMPTY SLOTS
+                <SortIcon field="empty_slots" columnSort={columnSort} />
+              </span>
             </th>
           </tr>
         </thead>
