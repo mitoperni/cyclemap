@@ -14,7 +14,6 @@ export function useSidebar() {
     };
 
     checkScreenSize();
-    // Pequeño delay para evitar animación en el render inicial
     requestAnimationFrame(() => {
       setHasMounted(true);
     });
@@ -22,7 +21,6 @@ export function useSidebar() {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  // En desktop siempre visible, en mobile depende de isOpen
   const shouldShowSidebar = isLargeScreen || isOpen;
 
   const toggle = useCallback(() => {

@@ -28,13 +28,10 @@ export function StationsMap({ center }: StationsMapProps) {
   const [mapClickedStationId, setMapClickedStationId] = useState<string | null>(null);
   const [mapError, setMapError] = useState<string | null>(null);
   const nearMeMapRef = useRef<MapRef | null>(null);
-  // Track if a station was just clicked to prevent map click from clearing selection
   const stationClickedRef = useRef(false);
 
-  // Set map labels to English
   useMapLanguage(mapInstance);
 
-  // Callback ref to capture the map instance
   const mapRefCallback = useCallback(
     (ref: MapRef | null) => {
       if (ref) {
@@ -46,21 +43,18 @@ export function StationsMap({ center }: StationsMapProps) {
     [registerMapRef]
   );
 
-  // Create station lookup for quick access
   const stationLookup = useMemo(() => {
     const lookup = new globalThis.Map<string, Station>();
     stations.forEach((s) => lookup.set(s.id, s));
     return lookup;
   }, [stations]);
 
-  // Derive selected station - sidebar selection takes priority over map click
   const selectedStation = useMemo(() => {
     const idToUse = selectedStationId || mapClickedStationId;
     if (!idToUse) return null;
     return stationLookup.get(idToUse) || null;
   }, [selectedStationId, mapClickedStationId, stationLookup]);
 
-  // Update map center on moveend
   useEffect(() => {
     if (!mapInstance) return;
 
@@ -88,7 +82,6 @@ export function StationsMap({ center }: StationsMapProps) {
   }, []);
 
   const handleStationClick = useCallback((station: Station) => {
-    // Set flag to prevent map click handler from clearing the selection
     stationClickedRef.current = true;
     setMapClickedStationId(station.id);
   }, []);
@@ -99,8 +92,6 @@ export function StationsMap({ center }: StationsMapProps) {
   }, [clearSelection]);
 
   const handleMapClick = useCallback(() => {
-    // If a station was just clicked, don't clear the selection
-    // This is needed because react-map-gl doesn't stop event propagation from Markers
     if (stationClickedRef.current) {
       stationClickedRef.current = false;
       return;
@@ -110,7 +101,6 @@ export function StationsMap({ center }: StationsMapProps) {
   }, [clearSelection]);
 
   const handleMapLoad = useCallback((e: { target: MapboxMap }) => {
-    // Resize immediately on load to fix container sizing issues
     e.target.resize();
   }, []);
 

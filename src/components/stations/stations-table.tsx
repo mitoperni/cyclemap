@@ -25,7 +25,6 @@ export function StationsTable() {
   const handleStationClick = useCallback(
     (stationId: string) => {
       flyToStation(stationId);
-      // En pantallas pequeñas, cerrar el sidebar para mostrar el mapa
       if (!isLargeScreen) {
         closeSidebar();
       }

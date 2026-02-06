@@ -8,8 +8,6 @@ interface NetworkDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
-// Memoize fetchNetworkDetail to avoid duplicate API calls
-// between generateMetadata and the page component
 const getNetworkDetail = cache(async (id: string) => {
   return fetchNetworkDetail(id);
 });

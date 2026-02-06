@@ -16,7 +16,7 @@ export function Sidebar({ children }: SidebarProps) {
     <aside
       id="sidebar"
       role="complementary"
-      aria-label="Panel de redes de bicicletas"
+      aria-label="Bike networks panel"
       className={cn(
         'flex flex-col bg-white',
         hasMounted && 'transition-all duration-300 ease-in-out',

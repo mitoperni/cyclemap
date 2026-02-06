@@ -21,8 +21,6 @@ interface MapboxMapProps {
 }
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
-
-// Only cluster layers are interactive (individual markers are React components)
 const INTERACTIVE_LAYER_IDS = [...CLUSTER_CONFIG.LAYER_IDS.CLUSTERS];
 
 export function MapboxMap({ networks }: MapboxMapProps) {
@@ -33,13 +31,9 @@ export function MapboxMap({ networks }: MapboxMapProps) {
   const { position: userPosition } = useGeolocationContext();
   const hasAutoFlyRef = useRef(false);
 
-  // Auto-fit bounds when networks change
   useFitBounds(mapRef, networks);
-
-  // Set map labels to English
   useMapLanguage(mapInstance);
 
-  // Auto-fly to user location on first position detection
   useEffect(() => {
     if (!mapInstance || !userPosition || hasAutoFlyRef.current) return;
 
@@ -72,7 +66,6 @@ export function MapboxMap({ networks }: MapboxMapProps) {
     const map = mapRef.current;
     if (!map) return;
 
-    // Query features at click point (only clusters)
     const features = map.queryRenderedFeatures(e.point, {
       layers: INTERACTIVE_LAYER_IDS,
     });
@@ -87,7 +80,6 @@ export function MapboxMap({ networks }: MapboxMapProps) {
     const source = map.getSource('networks') as GeoJSONSource;
     if (!source) return;
 
-    // Zoom to expand cluster
     source.getClusterExpansionZoom(clusterId, (err, zoom) => {
       if (err || zoom === undefined || zoom === null) return;
 
@@ -120,7 +112,6 @@ export function MapboxMap({ networks }: MapboxMapProps) {
     }
   }, []);
 
-  // Validate token before rendering
   if (!MAPBOX_TOKEN) {
     return (
       <MapError

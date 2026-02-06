@@ -30,7 +30,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             type="button"
             onClick={onClear}
             className="shrink-0 rounded-full p-1 text-torea-bay-400 hover:bg-torea-bay-100 hover:text-torea-bay-600 transition-colors"
-            aria-label="Limpiar búsqueda"
+            aria-label="Clear search"
           >
             <X className="h-4 w-4" />
           </button>

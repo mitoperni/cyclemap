@@ -35,7 +35,6 @@ export function Pagination({
     (page: number) => {
       onPageChange(page);
 
-      // Handle scroll - either scroll container to top or scroll element into view
       if (scrollContainerId) {
         const container = document.getElementById(scrollContainerId);
         container?.scrollTo({ top: 0, behavior: 'smooth' });

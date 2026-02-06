@@ -24,8 +24,7 @@ export const MAPBOX_CONFIG = {
 export const CLUSTER_CONFIG = {
   MAX_ZOOM: 14, // Stop clustering at this zoom level
   RADIUS: 50, // Cluster radius in pixels
-  ZOOM_ANIMATION_DURATION: 500, // ms for zoom animation when clicking cluster
-  // Grenadier color scale - darker = more networks
+  ZOOM_ANIMATION_DURATION: 500,
   COLORS: {
     SMALL: '#f37b44', // grenadier-400: < 10 points
     MEDIUM: '#de3e15', // grenadier-600: 10-99 points
@@ -40,7 +39,6 @@ export const STATION_CLUSTER_CONFIG = {
   MAX_ZOOM: 16, // Stop clustering at higher zoom for station detail
   RADIUS: 40, // Slightly smaller radius for denser station maps
   ZOOM_ANIMATION_DURATION: 500,
-  // Torea-bay color scale for stations
   COLORS: {
     SMALL: '#5b7ec1', // torea-bay-400: < 5 stations
     MEDIUM: '#3956a3', // torea-bay-600: 5-19 stations

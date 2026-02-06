@@ -13,7 +13,6 @@ interface StationClusterMarkersProps {
   onStationClick: (station: Station) => void;
 }
 
-// Convert stations to GeoJSON FeatureCollection
 function stationsToGeoJSON(stations: Station[]): GeoJSON.FeatureCollection<GeoJSON.Point> {
   return {
     type: 'FeatureCollection',
@@ -53,18 +52,15 @@ export function StationClusterMarkers({
 
   const geojsonData = useMemo(() => stationsToGeoJSON(stations), [stations]);
 
-  // Create a lookup map for quick access to station data
   const stationLookup = useMemo(() => {
     const lookup = new Map<string, Station>();
     stations.forEach((station) => lookup.set(station.id, station));
     return lookup;
   }, [stations]);
 
-  // Update unclustered stations when map moves or data changes
   const updateUnclusteredStations = useCallback(() => {
     if (!map || !map.isStyleLoaded()) return;
 
-    // Query rendered features that are NOT clustered
     const features = map.querySourceFeatures('stations', {
       filter: ['!', ['has', 'point_count']],
     });
@@ -88,13 +84,11 @@ export function StationClusterMarkers({
       })
       .filter((s): s is UnclusteredStation => s !== null);
 
-    // Deduplicate by id
     const uniqueStations = Array.from(new Map(unclustered.map((s) => [s.id, s])).values());
 
     setUnclusteredStations(uniqueStations);
   }, [map, stationLookup]);
 
-  // Listen to map events to update unclustered stations
   useEffect(() => {
     if (!map) return;
 
@@ -107,7 +101,6 @@ export function StationClusterMarkers({
     map.on('sourcedata', handleUpdate);
     map.on('style.load', handleUpdate);
 
-    // Initial update only if style is already loaded
     if (map.isStyleLoaded()) {
       handleUpdate();
     }
@@ -120,7 +113,6 @@ export function StationClusterMarkers({
     };
   }, [map, updateUnclusteredStations]);
 
-  // Handle cluster click - zoom into the cluster
   const handleClusterClick = useCallback(
     (e: MapMouseEvent) => {
       if (!map || !map.isStyleLoaded()) return;
@@ -151,13 +143,11 @@ export function StationClusterMarkers({
     [map]
   );
 
-  // Set up cluster click handlers
   useEffect(() => {
     if (!map) return;
 
     const layers = STATION_CLUSTER_CONFIG.LAYER_IDS.CLUSTERS;
 
-    // Add click handlers for cluster layers
     layers.forEach((layerId) => {
       map.on('click', layerId, handleClusterClick);
       map.on('mouseenter', layerId, () => {
@@ -181,7 +171,6 @@ export function StationClusterMarkers({
     };
   }, [map, handleClusterClick]);
 
-  // Handle individual station click
   const handleStationClick = useCallback(
     (station: UnclusteredStation) => {
       const fullStation = stationLookup.get(station.id);

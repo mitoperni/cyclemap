@@ -35,7 +35,6 @@ export function FilteredNetworksProvider({ networks, children }: FilteredNetwork
   const filteredNetworks = useMemo(() => {
     let result = networks;
 
-    // Apply filters if any
     if (countryValue || searchValue) {
       result = filterNetworks(result, {
         country: countryValue || undefined,
@@ -43,7 +42,6 @@ export function FilteredNetworksProvider({ networks, children }: FilteredNetwork
       });
     }
 
-    // Sort by distance if user position is available and no filters are active
     if (userPosition && !countryValue && !searchValue) {
       result = sortNetworksByDistance(result, userPosition.latitude, userPosition.longitude);
     }

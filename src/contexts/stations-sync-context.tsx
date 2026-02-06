@@ -56,24 +56,20 @@ export function StationsSyncProvider({
   const mapRefInternal = useRef<MapRef | null>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Create station lookup for O(1) access
   const stationLookup = useMemo(() => {
     const lookup = new Map<string, Station>();
     stations.forEach((s) => lookup.set(s.id, s));
     return lookup;
   }, [stations]);
 
-  // Sort stations by column or by distance to map center
   const sortedStations = useMemo(() => {
     const sorted = [...stations];
 
     if (columnSort) {
-      // Manual sorting by column
       sorted.sort((a, b) => {
         const { field, direction } = columnSort;
         const multiplier = direction === 'asc' ? 1 : -1;
 
-        // Handle null values for empty_slots (null goes last always)
         const aVal = a[field];
         const bVal = b[field];
         if (aVal === null && bVal === null) return 0;
@@ -83,7 +79,6 @@ export function StationsSyncProvider({
         return multiplier * (aVal - bVal);
       });
     } else {
-      // Default: sort by distance to map center
       sorted.sort((a, b) => {
         const distA = calculateDistance(
           mapCenter.latitude,
@@ -104,7 +99,6 @@ export function StationsSyncProvider({
     return sorted;
   }, [stations, mapCenter, columnSort]);
 
-  // Paginate sorted stations
   const { items: paginatedStations, pagination } = useMemo(() => {
     return paginateItems(sortedStations, currentPage, PAGINATION.DEFAULT_PAGE_SIZE);
   }, [sortedStations, currentPage]);
@@ -114,7 +108,6 @@ export function StationsSyncProvider({
   }, []);
 
   const updateMapCenter = useCallback((center: MapCenter) => {
-    // Debounce updates to avoid excessive re-sorting during pan
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
     }
@@ -157,7 +150,6 @@ export function StationsSyncProvider({
     setCurrentPage(1); // Reset to page 1 when sort changes
   }, []);
 
-  // Cleanup debounce timer on unmount
   useEffect(() => {
     return () => {
       if (debounceTimerRef.current) {

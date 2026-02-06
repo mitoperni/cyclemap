@@ -8,7 +8,6 @@ import { SidebarToggleButtonProps } from '@/types';
 export function SidebarOpenButton({ className, variant = 'light' }: SidebarToggleButtonProps) {
   const { open, isLargeScreen, isOpen } = useSidebarContext();
 
-  // Solo mostrar en mobile cuando el sidebar está cerrado
   if (isLargeScreen || isOpen) return null;
 
   return (
