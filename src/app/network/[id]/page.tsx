@@ -6,7 +6,7 @@ import { NetworkDetailClient } from './network-detail-client';
 import { GeolocationProvider } from '@/contexts';
 import { JsonLd } from '@/components/seo/json-ld';
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000').replace(/\/$/, '');
 
 interface NetworkDetailPageProps {
   params: Promise<{ id: string }>;
@@ -33,13 +33,20 @@ export async function generateMetadata({ params }: NetworkDetailPageProps): Prom
         type: 'website',
         url: `${baseUrl}/network/${id}`,
         siteName: 'CycleMap',
-        images: ['/stations_header.jpg'],
+        images: [
+          {
+            url: `${baseUrl}/stations_header.jpg`,
+            width: 1102,
+            height: 734,
+            alt: title,
+          },
+        ],
       },
       twitter: {
         card: 'summary_large_image',
         title,
         description,
-        images: ['/stations_header.jpg'],
+        images: [`${baseUrl}/stations_header.jpg`],
       },
       alternates: {
         canonical: `${baseUrl}/network/${id}`,

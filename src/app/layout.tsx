@@ -9,7 +9,7 @@ const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
 });
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000').replace(/\/$/, '');
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
       'Explore and discover bicycle sharing networks around the world. Find bike stations and plan your ride.',
     images: [
       {
-        url: '/stations_header.jpg',
+        url: `${baseUrl}/stations_header.jpg`,
         width: 1102,
         height: 734,
         alt: 'CycleMap - Bicycle Sharing Networks Worldwide',
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     title: 'CycleMap - Bicycle Sharing Networks Worldwide',
     description:
       'Explore and discover bicycle sharing networks around the world. Find bike stations and plan your ride.',
-    images: ['/stations_header.jpg'],
+    images: [`${baseUrl}/stations_header.jpg`],
   },
   alternates: {
     canonical: baseUrl,
