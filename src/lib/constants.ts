@@ -18,6 +18,7 @@ export const MAP_CONFIG = {
 
 export const MAPBOX_CONFIG = {
   STYLE: 'mapbox://styles/mapbox/light-v11',
+  LANGUAGE: 'en',
 } as const;
 
 export const CLUSTER_CONFIG = {

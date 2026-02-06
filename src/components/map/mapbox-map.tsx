@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { ClusterMarkers } from './cluster-markers';
 import { MapError } from './map-error';
 import { useFitBounds } from '@/hooks/use-fit-bounds';
+import { useMapLanguage } from '@/hooks/use-map-language';
 import { MAP_CONFIG, MAPBOX_CONFIG, CLUSTER_CONFIG, GEOLOCATION_CONFIG } from '@/lib/constants';
 import type { Network } from '@/types';
 
@@ -25,11 +26,15 @@ const INTERACTIVE_LAYER_IDS = [...CLUSTER_CONFIG.LAYER_IDS.CLUSTERS];
 
 export function MapboxMap({ networks }: MapboxMapProps) {
   const mapRef = useRef<MapRef>(null);
+  const [mapInstance, setMapInstance] = useState<MapRef | null>(null);
   const router = useRouter();
   const [mapError, setMapError] = useState<string | null>(null);
 
   // Auto-fit bounds when networks change
   useFitBounds(mapRef, networks);
+
+  // Set map labels to English
+  useMapLanguage(mapInstance);
 
   const handleMapError = useCallback((e: ErrorEvent) => {
     const errorMessage = e.error?.message || '';
@@ -93,6 +98,12 @@ export function MapboxMap({ networks }: MapboxMapProps) {
     }
   }, []);
 
+  const handleMapLoad = useCallback(() => {
+    if (mapRef.current) {
+      setMapInstance(mapRef.current);
+    }
+  }, []);
+
   // Validate token before rendering
   if (!MAPBOX_TOKEN) {
     return (
@@ -122,6 +133,7 @@ export function MapboxMap({ networks }: MapboxMapProps) {
       mapStyle={MAPBOX_CONFIG.STYLE}
       projection="mercator"
       style={{ width: '100%', height: '100%' }}
+      onLoad={handleMapLoad}
       onError={handleMapError}
       onClick={handleMapClick}
       onMouseEnter={handleMouseEnter}

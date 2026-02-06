@@ -9,6 +9,7 @@ import { StationPopup } from './station-popup';
 import { MapError } from '../map-error';
 import { NearMeButton } from '@/components/ui/near-me-button';
 import { useStationsSync } from '@/contexts/stations-sync-context';
+import { useMapLanguage } from '@/hooks/use-map-language';
 import { MAP_CONFIG, MAPBOX_CONFIG, GEOLOCATION_CONFIG } from '@/lib/constants';
 import type { Station } from '@/types';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -27,6 +28,9 @@ export function StationsMap({ center }: StationsMapProps) {
   const [mapClickedStationId, setMapClickedStationId] = useState<string | null>(null);
   const [mapError, setMapError] = useState<string | null>(null);
   const nearMeMapRef = useRef<MapRef | null>(null);
+
+  // Set map labels to English
+  useMapLanguage(mapInstance);
 
   // Callback ref to capture the map instance
   const mapRefCallback = useCallback(
