@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-
-const LG_BREAKPOINT = 1024;
+import { BREAKPOINTS } from '@/lib/constants';
 
 export function useSidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,7 +10,7 @@ export function useSidebar() {
 
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsLargeScreen(window.innerWidth >= LG_BREAKPOINT);
+      setIsLargeScreen(window.innerWidth >= BREAKPOINTS.XL);
     };
 
     checkScreenSize();

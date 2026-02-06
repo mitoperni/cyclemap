@@ -39,22 +39,24 @@ export function NetworkFilters({ countries }: NetworkFiltersProps) {
   };
 
   return (
-    <div className="flex gap-2">
-      <Input
-        type="text"
-        placeholder="Search network"
-        value={localSearch}
-        onChange={handleSearchChange}
-        onClear={handleClearSearch}
-        showSearchIcon
-        aria-label="Search networks by name or company"
-      />
-      <CountrySelect
-        value={countryValue}
-        onChange={handleCountryChange}
-        countries={countries}
-        placeholder="Country"
-      />
+    <div className="sticky top-0 z-10 bg-white py-2">
+      <div className="flex gap-2">
+        <Input
+          type="text"
+          placeholder="Search network"
+          value={localSearch}
+          onChange={handleSearchChange}
+          onClear={handleClearSearch}
+          showSearchIcon
+          aria-label="Search networks by name or company"
+        />
+        <CountrySelect
+          value={countryValue}
+          onChange={handleCountryChange}
+          countries={countries}
+          placeholder="Country"
+        />
+      </div>
     </div>
   );
 }

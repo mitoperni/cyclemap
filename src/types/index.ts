@@ -103,6 +103,11 @@ export interface MapPopupProps {
   onClose: () => void;
 }
 
+export interface SidebarToggleButtonProps {
+  className?: string;
+  variant?: 'light' | 'dark';
+}
+
 // Geolocation Types
 // ============================================
 

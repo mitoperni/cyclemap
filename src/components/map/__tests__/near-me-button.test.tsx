@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { NearMeButton } from '../near-me-button';
+import { NearMeButton } from '../../ui/near-me-button';
 import { GEOLOCATION_CONFIG } from '@/lib/constants';
 
 vi.mock('@/hooks/use-geolocation', () => ({

@@ -1,7 +1,7 @@
 import { Sidebar } from '@/components/layout/sidebar';
-import { SidebarOpenButton } from '@/components/layout/sidebar-toggle-button';
 import { MapContainer } from '@/components/map';
 import { NetworkSidebar } from '@/components/networks';
+import { SidebarOpenButton } from '@/components/ui/sidebar-open-button';
 import { FilteredNetworksProvider, SidebarProvider } from '@/contexts';
 import { fetchNetworks } from '@/lib/api/networks';
 import { getUniqueCountries } from '@/lib/utils';

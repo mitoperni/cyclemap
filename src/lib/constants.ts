@@ -75,3 +75,7 @@ export const GEOLOCATION_CONFIG = {
   NETWORK_ZOOM: 11,
   STATION_ZOOM: 16,
 } as const;
+
+export const BREAKPOINTS = {
+  XL: 1280, // Sidebar collapses below this width
+} as const;

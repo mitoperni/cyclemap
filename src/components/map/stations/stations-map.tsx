@@ -7,11 +7,10 @@ import type { Map as MapboxMap } from 'mapbox-gl';
 import { StationClusterMarkers } from './station-cluster-markers';
 import { StationPopup } from './station-popup';
 import { MapError } from '../map-error';
-import { NearMeButton } from '../near-me-button';
+import { NearMeButton } from '@/components/ui/near-me-button';
 import { useStationsSync } from '@/contexts/stations-sync-context';
 import { MAP_CONFIG, MAPBOX_CONFIG, GEOLOCATION_CONFIG } from '@/lib/constants';
 import type { Station } from '@/types';
-
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 interface StationsMapProps {
@@ -136,7 +135,7 @@ export function StationsMap({ center }: StationsMapProps) {
       <NearMeButton
         mapRef={nearMeMapRef}
         zoom={GEOLOCATION_CONFIG.STATION_ZOOM}
-        className="absolute left-8 top-8 z-10 max-lg:left-auto max-lg:right-4 max-lg:top-4"
+        className="absolute left-8 top-8 z-10 max-xl:left-auto max-xl:right-4 max-xl:top-4"
       />
       <NavigationControl position="bottom-right" showCompass={false} />
 
