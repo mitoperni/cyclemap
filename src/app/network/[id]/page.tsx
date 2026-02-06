@@ -5,6 +5,7 @@ import { fetchNetworkDetail } from '@/lib/api/network-detail';
 import { NetworkDetailClient } from './network-detail-client';
 import { GeolocationProvider } from '@/contexts';
 import { JsonLd } from '@/components/seo/json-ld';
+import { NetworkWithStations } from '@/types';
 
 const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000').replace(/\/$/, '');
 
@@ -62,9 +63,10 @@ export async function generateMetadata({ params }: NetworkDetailPageProps): Prom
 
 export default async function NetworkDetailPage({ params }: NetworkDetailPageProps) {
   const { id } = await params;
-  const network = await getNetworkDetail(id);
-
-  if (!network) {
+  let network: NetworkWithStations;
+  try {
+    network = await getNetworkDetail(id);
+  } catch {
     notFound();
   }
 
