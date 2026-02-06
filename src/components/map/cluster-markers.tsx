@@ -11,7 +11,6 @@ interface ClusterMarkersProps {
   onNetworkClick: (networkId: string) => void;
 }
 
-// Convert networks to GeoJSON FeatureCollection
 function networksToGeoJSON(networks: Network[]): GeoJSON.FeatureCollection<GeoJSON.Point> {
   return {
     type: 'FeatureCollection',
@@ -46,18 +45,15 @@ export function ClusterMarkers({ networks, onNetworkClick }: ClusterMarkersProps
 
   const geojsonData = useMemo(() => networksToGeoJSON(networks), [networks]);
 
-  // Create a lookup map for quick access to network data
   const networkLookup = useMemo(() => {
     const lookup = new Map<string, Network>();
     networks.forEach((network) => lookup.set(network.id, network));
     return lookup;
   }, [networks]);
 
-  // Update unclustered networks when map moves or data changes
   const updateUnclusteredNetworks = useCallback(() => {
     if (!map) return;
 
-    // Query rendered features that are NOT clustered
     const features = map.querySourceFeatures('networks', {
       filter: ['!', ['has', 'point_count']],
     });
@@ -80,26 +76,21 @@ export function ClusterMarkers({ networks, onNetworkClick }: ClusterMarkersProps
       })
       .filter((n): n is UnclusteredNetwork => n !== null);
 
-    // Deduplicate by id
     const uniqueNetworks = Array.from(new Map(unclustered.map((n) => [n.id, n])).values());
 
     setUnclusteredNetworks(uniqueNetworks);
   }, [map, networkLookup]);
 
-  // Listen to map events to update unclustered networks
   useEffect(() => {
     if (!map) return;
 
     const handleUpdate = () => {
-      // Use requestAnimationFrame to debounce updates
       requestAnimationFrame(updateUnclusteredNetworks);
     };
 
     map.on('moveend', handleUpdate);
     map.on('zoomend', handleUpdate);
     map.on('sourcedata', handleUpdate);
-
-    // Initial update
     handleUpdate();
 
     return () => {

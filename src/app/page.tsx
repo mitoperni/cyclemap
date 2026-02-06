@@ -20,7 +20,6 @@ export default async function Home() {
             </Sidebar>
 
             <main className="absolute inset-0 lg:relative lg:flex-1">
-              {/* Botón hamburguesa - solo visible en mobile */}
               <SidebarOpenButton className="absolute left-4 top-4 z-20" variant="light" />
               <MapContainer />
             </main>

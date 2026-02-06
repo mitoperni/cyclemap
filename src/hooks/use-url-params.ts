@@ -34,7 +34,6 @@ export function useUrlParams() {
         }
       });
 
-      // Don't include page=1 in URL (it's the default)
       if (params.get('page') === '1') {
         params.delete('page');
       }
@@ -46,13 +45,11 @@ export function useUrlParams() {
   );
 
   const setSearch = useDebouncedCallback((search: string) => {
-    // Reset page to 1 when search changes
     updateParams({ search: search || undefined, page: undefined });
   }, USE_URL_PARAMS.DEBOUNCE_MS);
 
   const setCountry = useCallback(
     (country: string) => {
-      // Reset page to 1 when country changes
       updateParams({ country: country || undefined, page: undefined });
     },
     [updateParams]

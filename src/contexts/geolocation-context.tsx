@@ -78,25 +78,20 @@ export function GeolocationProvider({ children }: { children: ReactNode }) {
         setHasAskedPermission(true);
         requestInFlightRef.current = false;
 
-        // Only store if permission was denied - to avoid asking again this session
         if (errorType === 'PERMISSION_DENIED') {
           try {
             sessionStorage.setItem(GEOLOCATION_CONFIG.STORAGE_KEY, 'denied');
-          } catch {
-            // Ignore storage errors
-          }
+          } catch {}
         }
       },
       GEOLOCATION_CONFIG.DEFAULT_OPTIONS
     );
   }, []);
 
-  // Auto-request location on first load
   useEffect(() => {
     if (hasAutoRequestedRef.current) return;
     hasAutoRequestedRef.current = true;
 
-    // Check if user previously denied permission - don't ask again in this session
     try {
       const previouslyDenied = sessionStorage.getItem(GEOLOCATION_CONFIG.STORAGE_KEY) === 'denied';
       if (previouslyDenied) {
@@ -104,11 +99,8 @@ export function GeolocationProvider({ children }: { children: ReactNode }) {
         setError('PERMISSION_DENIED');
         return;
       }
-    } catch {
-      // Ignore storage errors
-    }
+    } catch {}
 
-    // Always request location (will be silent if permission was already granted)
     requestLocation();
   }, [requestLocation]);
 

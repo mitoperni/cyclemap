@@ -19,7 +19,6 @@ export function useMapLanguage(mapRef: MapRef | null) {
 
     map.addControl(languageControl);
 
-    // If style is already loaded, apply language immediately
     if (map.isStyleLoaded()) {
       const style = map.getStyle();
       if (style) {

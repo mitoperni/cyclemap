@@ -29,16 +29,11 @@ export function getUniqueCountries(networks: Network[]): string[] {
 export function cleanStationName(name: string): string {
   let cleaned = name.trim();
 
-  // Remove leading alphanumeric prefixes (e.g., "001 - Station Name", "25A - Plaza de Celenque A")
   cleaned = cleaned.replace(/^[A-Z0-9]+[\s\-\.]+\s*/, '');
-
-  // Remove leading short code prefixes (e.g., "AUH - Marina Mall Signal")
   cleaned = cleaned.replace(/^[A-Z]{2,4}\s*-\s*/, '');
 
-  // Remove leading underscores and convert ALL CAPS to Title Case
   if (cleaned.startsWith('_')) {
     cleaned = cleaned.replace(/^_+/, '');
-    // Check if the remaining text is all uppercase
     if (cleaned === cleaned.toUpperCase() && /[A-Z]/.test(cleaned)) {
       cleaned = cleaned
         .toLowerCase()

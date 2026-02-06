@@ -17,7 +17,7 @@ export function SidebarStation({ children }: SidebarProps) {
     <aside
       id="sidebar"
       role="complementary"
-      aria-label="Panel de estaciones"
+      aria-label="Stations panel"
       className={cn(
         'flex flex-col bg-torea-bay-800',
         hasMounted && 'transition-all duration-300 ease-in-out',

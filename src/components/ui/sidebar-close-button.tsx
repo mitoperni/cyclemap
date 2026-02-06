@@ -8,7 +8,6 @@ import { SidebarToggleButtonProps } from '@/types';
 export function SidebarCloseButton({ className, variant = 'light' }: SidebarToggleButtonProps) {
   const { close, isLargeScreen, isOpen } = useSidebarContext();
 
-  // Solo mostrar en mobile cuando el sidebar está abierto
   if (isLargeScreen || !isOpen) return null;
 
   return (
@@ -23,7 +22,7 @@ export function SidebarCloseButton({ className, variant = 'light' }: SidebarTogg
           : 'bg-torea-bay-300 text-torea-bay-950 hover:bg-torea-bay-50 focus:ring-grenadier-400',
         className
       )}
-      aria-label="Cerrar menú lateral"
+      aria-label="Close sidebar menu"
       aria-expanded="true"
       aria-controls="sidebar"
     >

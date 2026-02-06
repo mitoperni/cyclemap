@@ -19,13 +19,10 @@ export function NearMeButton({ mapRef, zoom, className }: NearMeButtonProps) {
   const hasFlownToPositionRef = useRef(false);
   const userClickedRef = useRef(false);
 
-  // Fly to position when it changes, but only if user clicked the button
-  // (not on auto-request at page load)
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !position) return;
 
-    // Only fly to position if user explicitly clicked the button
     if (!userClickedRef.current) {
       hasFlownToPositionRef.current = true;
       return;
@@ -45,7 +42,6 @@ export function NearMeButton({ mapRef, zoom, className }: NearMeButtonProps) {
     if (error) {
       clearError();
     }
-    // If we already have position, fly to it directly
     if (position && !error) {
       const map = mapRef.current;
       if (map) {

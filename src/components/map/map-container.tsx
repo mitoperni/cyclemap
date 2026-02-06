@@ -5,7 +5,6 @@ import { MapSkeleton } from './map-skeleton';
 import { MapPlaceholder } from './map-placeholder';
 import { useFilteredNetworks } from '@/contexts';
 
-// Lazy load Mapbox only when needed to reduce bundle and avoid SSR issues
 const MapboxMap = dynamic(
   () => import('./mapbox-map').then((mod) => ({ default: mod.MapboxMap })),
   {

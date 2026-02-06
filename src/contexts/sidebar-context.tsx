@@ -20,7 +20,6 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
   return <SidebarContext.Provider value={sidebarState}>{children}</SidebarContext.Provider>;
 }
 
-// Default values for when context is not available (SSR or outside provider)
 const defaultSidebarState: SidebarContextValue = {
   isOpen: false,
   isLargeScreen: true,
@@ -33,6 +32,5 @@ const defaultSidebarState: SidebarContextValue = {
 
 export function useSidebarContext() {
   const context = useContext(SidebarContext);
-  // Return default state if no provider (for SSR or pages without provider)
   return context ?? defaultSidebarState;
 }
