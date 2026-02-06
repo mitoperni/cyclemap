@@ -5,6 +5,7 @@ import { StationRow } from './station-row';
 import { Pagination } from '@/components/ui/pagination';
 import { SortIcon } from '@/components/ui/sort-icon';
 import { useStationsSync } from '@/contexts/stations-sync-context';
+import { useSidebarContext } from '@/contexts/sidebar-context';
 import { STATIONS_SCROLL_CONTAINER_ID } from '@/components/layout/sidebar-station';
 import { getAriaSort } from '@/lib/utils';
 
@@ -19,12 +20,17 @@ export function StationsTable() {
     columnSort,
     handleColumnSort,
   } = useStationsSync();
+  const { close: closeSidebar, isLargeScreen } = useSidebarContext();
 
   const handleStationClick = useCallback(
     (stationId: string) => {
       flyToStation(stationId);
+      // En pantallas pequeñas, cerrar el sidebar para mostrar el mapa
+      if (!isLargeScreen) {
+        closeSidebar();
+      }
     },
-    [flyToStation]
+    [flyToStation, isLargeScreen, closeSidebar]
   );
 
   if (sortedStations.length === 0) {

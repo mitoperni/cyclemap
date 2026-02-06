@@ -131,7 +131,7 @@ export function MapboxMap({ networks }: MapboxMapProps) {
       <NearMeButton
         mapRef={mapRef}
         zoom={GEOLOCATION_CONFIG.NETWORK_ZOOM}
-        className="absolute left-8 top-8 z-10"
+        className="absolute left-8 top-8 z-10 max-lg:left-auto max-lg:right-4 max-lg:top-4"
       />
       <NavigationControl position="bottom-right" showCompass={false} />
       <ClusterMarkers networks={networks} onNetworkClick={handleNetworkClick} />

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { CountrySelect } from '@/components/ui/country-select';
 import { useUrlParams } from '@/hooks/use-url-params';
+import { useSidebarContext } from '@/contexts/sidebar-context';
 
 interface NetworkFiltersProps {
   countries: string[];
@@ -11,6 +12,7 @@ interface NetworkFiltersProps {
 
 export function NetworkFilters({ countries }: NetworkFiltersProps) {
   const { searchValue, countryValue, setSearch, setCountry } = useUrlParams();
+  const { close: closeSidebar, isLargeScreen } = useSidebarContext();
   const [localSearch, setLocalSearch] = useState(searchValue);
 
   useEffect(() => {
@@ -30,6 +32,10 @@ export function NetworkFilters({ countries }: NetworkFiltersProps) {
 
   const handleCountryChange = (value: string) => {
     setCountry(value);
+    // En pantallas pequeñas, cerrar el sidebar para mostrar el mapa
+    if (!isLargeScreen && value) {
+      closeSidebar();
+    }
   };
 
   return (

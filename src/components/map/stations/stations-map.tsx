@@ -3,6 +3,7 @@
 import { useCallback, useState, useEffect, useMemo, useRef } from 'react';
 import Map, { NavigationControl } from 'react-map-gl/mapbox';
 import type { MapRef, ErrorEvent } from 'react-map-gl/mapbox';
+import type { Map as MapboxMap } from 'mapbox-gl';
 import { StationClusterMarkers } from './station-cluster-markers';
 import { StationPopup } from './station-popup';
 import { MapError } from '../map-error';
@@ -95,6 +96,11 @@ export function StationsMap({ center }: StationsMapProps) {
     clearSelection();
   }, [clearSelection]);
 
+  const handleMapLoad = useCallback((e: { target: MapboxMap }) => {
+    // Resize immediately on load to fix container sizing issues
+    e.target.resize();
+  }, []);
+
   if (!MAPBOX_TOKEN) {
     return (
       <MapError
@@ -123,13 +129,14 @@ export function StationsMap({ center }: StationsMapProps) {
       mapStyle={MAPBOX_CONFIG.STYLE}
       projection="mercator"
       style={{ width: '100%', height: '100%' }}
+      onLoad={handleMapLoad}
       onError={handleMapError}
       onClick={handleMapClick}
     >
       <NearMeButton
         mapRef={nearMeMapRef}
         zoom={GEOLOCATION_CONFIG.STATION_ZOOM}
-        className="absolute left-8 top-8 z-10"
+        className="absolute left-8 top-8 z-10 max-lg:left-auto max-lg:right-4 max-lg:top-4"
       />
       <NavigationControl position="bottom-right" showCompass={false} />
 

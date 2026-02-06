@@ -1,10 +1,12 @@
 'use client';
 
 import { SidebarStation } from '@/components/layout/sidebar-station';
+import { SidebarOpenButton } from '@/components/layout/sidebar-toggle-button';
 import { StationsHeader } from '@/components/stations/stations-header';
 import { StationsTable } from '@/components/stations/stations-table';
 import { StationsMapContainer } from '@/components/map';
 import { StationsSyncProvider } from '@/contexts/stations-sync-context';
+import { SidebarProvider } from '@/contexts/sidebar-context';
 import type { NetworkWithStations } from '@/types';
 
 interface NetworkDetailClientProps {
@@ -19,16 +21,20 @@ export function NetworkDetailClient({ network }: NetworkDetailClientProps) {
 
   return (
     <StationsSyncProvider stations={network.stations} initialCenter={center}>
-      <div className="flex h-screen flex-col lg:flex-row">
-        <SidebarStation>
-          <StationsHeader network={network} />
-          <StationsTable />
-        </SidebarStation>
+      <SidebarProvider>
+        <div className="h-screen lg:flex lg:flex-row">
+          <SidebarStation>
+            <StationsHeader network={network} />
+            <StationsTable />
+          </SidebarStation>
 
-        <main className="relative min-h-[300px] flex-1 lg:min-h-0">
-          <StationsMapContainer center={center} />
-        </main>
-      </div>
+          <main className="absolute inset-0 lg:relative lg:flex-1">
+            {/* Botón hamburguesa - solo visible en mobile */}
+            <SidebarOpenButton className="absolute left-4 top-4 z-20" variant="dark" />
+            <StationsMapContainer center={center} />
+          </main>
+        </div>
+      </SidebarProvider>
     </StationsSyncProvider>
   );
 }

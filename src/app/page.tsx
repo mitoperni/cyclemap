@@ -1,7 +1,8 @@
 import { Sidebar } from '@/components/layout/sidebar';
+import { SidebarOpenButton } from '@/components/layout/sidebar-toggle-button';
 import { MapContainer } from '@/components/map';
 import { NetworkSidebar } from '@/components/networks';
-import { FilteredNetworksProvider } from '@/contexts';
+import { FilteredNetworksProvider, SidebarProvider } from '@/contexts';
 import { fetchNetworks } from '@/lib/api/networks';
 import { getUniqueCountries } from '@/lib/utils';
 
@@ -11,15 +12,19 @@ export default async function Home() {
 
   return (
     <FilteredNetworksProvider networks={networks}>
-      <div className="flex h-screen flex-col lg:flex-row">
-        <Sidebar>
-          <NetworkSidebar countries={countries} />
-        </Sidebar>
+      <SidebarProvider>
+        <div className="h-screen lg:flex lg:flex-row">
+          <Sidebar>
+            <NetworkSidebar countries={countries} />
+          </Sidebar>
 
-        <main className="relative min-h-[300px] flex-1 lg:min-h-0">
-          <MapContainer />
-        </main>
-      </div>
+          <main className="absolute inset-0 lg:relative lg:flex-1">
+            {/* Botón hamburguesa - solo visible en mobile */}
+            <SidebarOpenButton className="absolute left-4 top-4 z-20" variant="light" />
+            <MapContainer />
+          </main>
+        </div>
+      </SidebarProvider>
     </FilteredNetworksProvider>
   );
 }
