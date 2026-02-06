@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { Locate, Loader2, X } from 'lucide-react';
 import type { MapRef } from 'react-map-gl/mapbox';
-import { useGeolocation } from '@/hooks/use-geolocation';
+import { useGeolocationContext } from '@/contexts';
 import { GEOLOCATION_CONFIG, MAP_CONFIG } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 
@@ -15,11 +15,21 @@ interface NearMeButtonProps {
 
 export function NearMeButton({ mapRef, zoom, className }: NearMeButtonProps) {
   const { position, isLoading, error, errorMessage, requestLocation, clearError } =
-    useGeolocation();
+    useGeolocationContext();
+  const hasFlownToPositionRef = useRef(false);
+  const userClickedRef = useRef(false);
 
+  // Fly to position when it changes, but only if user clicked the button
+  // (not on auto-request at page load)
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !position) return;
+
+    // Only fly to position if user explicitly clicked the button
+    if (!userClickedRef.current) {
+      hasFlownToPositionRef.current = true;
+      return;
+    }
 
     map.flyTo({
       center: [position.longitude, position.latitude],
@@ -27,14 +37,29 @@ export function NearMeButton({ mapRef, zoom, className }: NearMeButtonProps) {
       duration: MAP_CONFIG.ANIMATION_DURATION,
       essential: true,
     });
+    userClickedRef.current = false;
   }, [mapRef, position, zoom]);
 
   const handleClick = useCallback(() => {
+    userClickedRef.current = true;
     if (error) {
       clearError();
     }
-    requestLocation();
-  }, [error, clearError, requestLocation]);
+    // If we already have position, fly to it directly
+    if (position && !error) {
+      const map = mapRef.current;
+      if (map) {
+        map.flyTo({
+          center: [position.longitude, position.latitude],
+          zoom: zoom ?? GEOLOCATION_CONFIG.NETWORK_ZOOM,
+          duration: MAP_CONFIG.ANIMATION_DURATION,
+          essential: true,
+        });
+      }
+    } else {
+      requestLocation();
+    }
+  }, [error, clearError, position, mapRef, zoom, requestLocation]);
 
   if (error) {
     return (

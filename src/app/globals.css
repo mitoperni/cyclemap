@@ -51,3 +51,12 @@
   /* Layout */
   --sidebar-width: 551px;
 }
+
+/* Mapbox: Ensure popup always appears above markers */
+.mapboxgl-popup {
+  z-index: 100 !important;
+}
+
+.mapboxgl-marker {
+  z-index: 1 !important;
+}

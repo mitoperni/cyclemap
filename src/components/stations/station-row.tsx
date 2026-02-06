@@ -41,7 +41,7 @@ export const StationRow = memo(function StationRow({
       onKeyDown={onClick ? handleKeyDown : undefined}
     >
       <td
-        className="ps-2 py-[18px] font-normal text-base leading-7 text-white transition-[padding] duration-300 ease-out group-hover:ps-4"
+        className="ps-2 py-[18px] font-normal text-base leading-7 text-white transition-[padding] duration-300 ease-out group-hover:ps-4 max-w-[180px] truncate"
         title={cleanName}
       >
         {cleanName}

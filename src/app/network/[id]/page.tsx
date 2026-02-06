@@ -1,16 +1,24 @@
+import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import { fetchNetworkDetail } from '@/lib/api/network-detail';
 import { NetworkDetailClient } from './network-detail-client';
+import { GeolocationProvider } from '@/contexts';
 
 interface NetworkDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
+// Memoize fetchNetworkDetail to avoid duplicate API calls
+// between generateMetadata and the page component
+const getNetworkDetail = cache(async (id: string) => {
+  return fetchNetworkDetail(id);
+});
+
 export async function generateMetadata({ params }: NetworkDetailPageProps) {
   const { id } = await params;
 
   try {
-    const network = await fetchNetworkDetail(id);
+    const network = await getNetworkDetail(id);
     return {
       title: `${network.name} | CycleMap`,
       description: `View stations for ${network.name} in ${network.location.city}, ${network.location.country}`,
@@ -24,11 +32,15 @@ export async function generateMetadata({ params }: NetworkDetailPageProps) {
 
 export default async function NetworkDetailPage({ params }: NetworkDetailPageProps) {
   const { id } = await params;
-  const network = await fetchNetworkDetail(id);
+  const network = await getNetworkDetail(id);
 
   if (!network) {
     notFound();
   }
 
-  return <NetworkDetailClient network={network} />;
+  return (
+    <GeolocationProvider>
+      <NetworkDetailClient network={network} />
+    </GeolocationProvider>
+  );
 }

@@ -3,7 +3,8 @@
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { filterNetworks } from '@/lib/api/networks';
-import { paginateItems, parsePageParam } from '@/lib/utils';
+import { paginateItems, parsePageParam, sortNetworksByDistance } from '@/lib/utils';
+import { useGeolocationContext } from './geolocation-context';
 import type { Network, PaginationInfo } from '@/types';
 
 interface FilteredNetworksContextValue {
@@ -25,21 +26,30 @@ interface FilteredNetworksProviderProps {
 
 export function FilteredNetworksProvider({ networks, children }: FilteredNetworksProviderProps) {
   const searchParams = useSearchParams();
+  const { position: userPosition } = useGeolocationContext();
 
   const searchValue = searchParams.get('search') || '';
   const countryValue = searchParams.get('country') || '';
   const currentPage = parsePageParam(searchParams.get('page'));
 
   const filteredNetworks = useMemo(() => {
-    if (!countryValue && !searchValue) {
-      return networks;
+    let result = networks;
+
+    // Apply filters if any
+    if (countryValue || searchValue) {
+      result = filterNetworks(result, {
+        country: countryValue || undefined,
+        search: searchValue || undefined,
+      });
     }
 
-    return filterNetworks(networks, {
-      country: countryValue || undefined,
-      search: searchValue || undefined,
-    });
-  }, [networks, countryValue, searchValue]);
+    // Sort by distance if user position is available and no filters are active
+    if (userPosition && !countryValue && !searchValue) {
+      result = sortNetworksByDistance(result, userPosition.latitude, userPosition.longitude);
+    }
+
+    return result;
+  }, [networks, countryValue, searchValue, userPosition]);
 
   const { items: paginatedNetworks, pagination } = useMemo(() => {
     return paginateItems(filteredNetworks, currentPage);
