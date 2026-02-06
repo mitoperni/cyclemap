@@ -41,7 +41,9 @@ export function NetworkCard({ network }: NetworkCardProps) {
                 <div className="flex items-center justify-center h-6 w-6 bg-torea-bay-50 rounded-[4px]">
                   <Building2 className="h-4 w-4 text-grenadier-400" />
                 </div>
-                <span className="truncate leading-7 text-muted-foreground">{companiesText}</span>
+                <span className="max-w-[180px] truncate leading-7 text-muted-foreground">
+                  {companiesText}
+                </span>
                 {remainingCount > 0 && (
                   <span className="shrink-0 rounded border border-grenadier-400 px-1.5 py-0.5 text-xs text-grenadier-500">
                     +{remainingCount}
