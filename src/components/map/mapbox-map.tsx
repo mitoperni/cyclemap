@@ -129,6 +129,7 @@ export function MapboxMap({ networks }: MapboxMapProps) {
     <div
       role="region"
       aria-label="Interactive map showing bicycle sharing networks worldwide. Use mouse or touch to pan and zoom. Click on markers to view network details."
+      style={{ width: '100%', height: '100%' }}
     >
       <Map
         ref={mapRef}
