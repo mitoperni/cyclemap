@@ -58,6 +58,10 @@ export const STATION_CLUSTER_CONFIG = {
   },
 } as const;
 
+export const COUNTRY_SELECT = {
+  CLEAR_INDEX: -2, // Virtual index for "All countries" option in keyboard navigation
+} as const;
+
 export const PAGINATION = {
   DEFAULT_PAGE_SIZE: 10,
 } as const;
