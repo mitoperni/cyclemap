@@ -83,13 +83,18 @@ export function CountrySelect({
                 placeholder="Search country"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                aria-label="Search countries by name"
                 className="w-full bg-transparent text-base text-torea-bay-800 placeholder:text-torea-bay-800 placeholder:opacity-50 focus:outline-none"
               />
             </div>
           </div>
 
           {/* Country list */}
-          <div className="max-h-[200px] overflow-y-auto px-1 py-[6px]">
+          <div
+            role="listbox"
+            aria-label="Countries"
+            className="max-h-[200px] overflow-y-auto px-1 py-[6px]"
+          >
             {value && (
               <button
                 type="button"
@@ -109,8 +114,11 @@ export function CountrySelect({
                   key={code}
                   type="button"
                   onClick={() => handleSelect(code)}
+                  tabIndex={0}
+                  role="option"
+                  aria-selected={value === code}
                   className={cn(
-                    'w-full px-2 py-[6px] text-left text-sm font-normal leading-5 text-torea-bay-950 hover:bg-torea-bay-50',
+                    'w-full px-2 py-3 text-left text-sm font-normal leading-5 text-torea-bay-950 hover:bg-torea-bay-100 focus:bg-torea-bay-100 focus:outline-none',
                     value === code && 'bg-torea-bay-50 !font-medium'
                   )}
                 >
