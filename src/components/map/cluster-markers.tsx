@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useCallback, useEffect } from 'react';
+import { useMemo, useState, useCallback, useEffect, useRef } from 'react';
 import { Source, Layer, useMap } from 'react-map-gl/mapbox';
 import type { Network } from '@/types';
 import { CLUSTER_CONFIG } from '@/lib/constants';
@@ -81,10 +81,17 @@ export function ClusterMarkers({ networks, onNetworkClick }: ClusterMarkersProps
     setUnclusteredNetworks(uniqueNetworks);
   }, [map, networkLookup]);
 
+  const lastUpdateRef = useRef(0);
+
   useEffect(() => {
     if (!map) return;
 
+    const THROTTLE_MS = 300;
     const handleUpdate = () => {
+      const now = Date.now();
+      if (now - lastUpdateRef.current < THROTTLE_MS) return;
+      lastUpdateRef.current = now;
+
       requestAnimationFrame(updateUnclusteredNetworks);
     };
 
