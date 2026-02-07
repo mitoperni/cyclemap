@@ -126,34 +126,39 @@ export function MapboxMap({ networks }: MapboxMapProps) {
   }
 
   return (
-    <Map
-      ref={mapRef}
-      reuseMaps={true}
-      mapboxAccessToken={MAPBOX_TOKEN}
-      initialViewState={{
-        longitude: MAP_CONFIG.DEFAULT_CENTER.lng,
-        latitude: MAP_CONFIG.DEFAULT_CENTER.lat,
-        zoom: MAP_CONFIG.DEFAULT_ZOOM,
-      }}
-      minZoom={MAP_CONFIG.MIN_ZOOM}
-      maxZoom={MAP_CONFIG.MAX_ZOOM}
-      mapStyle={MAPBOX_CONFIG.STYLE}
-      projection="mercator"
-      style={{ width: '100%', height: '100%' }}
-      onLoad={handleMapLoad}
-      onError={handleMapError}
-      onClick={handleMapClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      interactiveLayerIds={INTERACTIVE_LAYER_IDS}
+    <div
+      role="region"
+      aria-label="Interactive map showing bicycle sharing networks worldwide. Use mouse or touch to pan and zoom. Click on markers to view network details."
     >
-      <NearMeButton
-        mapRef={mapRef}
-        zoom={GEOLOCATION_CONFIG.NETWORK_ZOOM}
-        className="absolute left-8 top-8 z-10 max-xl:left-auto max-xl:right-4 max-xl:top-4"
-      />
-      <NavigationControl position="bottom-right" showCompass={false} />
-      <ClusterMarkers networks={networks} onNetworkClick={handleNetworkClick} />
-    </Map>
+      <Map
+        ref={mapRef}
+        reuseMaps={true}
+        mapboxAccessToken={MAPBOX_TOKEN}
+        initialViewState={{
+          longitude: MAP_CONFIG.DEFAULT_CENTER.lng,
+          latitude: MAP_CONFIG.DEFAULT_CENTER.lat,
+          zoom: MAP_CONFIG.DEFAULT_ZOOM,
+        }}
+        minZoom={MAP_CONFIG.MIN_ZOOM}
+        maxZoom={MAP_CONFIG.MAX_ZOOM}
+        mapStyle={MAPBOX_CONFIG.STYLE}
+        projection="mercator"
+        style={{ width: '100%', height: '100%' }}
+        onLoad={handleMapLoad}
+        onError={handleMapError}
+        onClick={handleMapClick}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        interactiveLayerIds={INTERACTIVE_LAYER_IDS}
+      >
+        <NearMeButton
+          mapRef={mapRef}
+          zoom={GEOLOCATION_CONFIG.NETWORK_ZOOM}
+          className="absolute left-8 top-8 z-10 max-xl:left-auto max-xl:right-4 max-xl:top-4"
+        />
+        <NavigationControl position="bottom-right" showCompass={false} />
+        <ClusterMarkers networks={networks} onNetworkClick={handleNetworkClick} />
+      </Map>
+    </div>
   );
 }
