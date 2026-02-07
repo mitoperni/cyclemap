@@ -143,6 +143,18 @@ export function StationClusterMarkers({
     [map]
   );
 
+  const handleMouseEnter = useCallback(() => {
+    if (map) {
+      map.getCanvas().style.cursor = 'pointer';
+    }
+  }, [map]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (map) {
+      map.getCanvas().style.cursor = '';
+    }
+  }, [map]);
+
   useEffect(() => {
     if (!map) return;
 
@@ -150,26 +162,18 @@ export function StationClusterMarkers({
 
     layers.forEach((layerId) => {
       map.on('click', layerId, handleClusterClick);
-      map.on('mouseenter', layerId, () => {
-        map.getCanvas().style.cursor = 'pointer';
-      });
-      map.on('mouseleave', layerId, () => {
-        map.getCanvas().style.cursor = '';
-      });
+      map.on('mouseenter', layerId, handleMouseEnter);
+      map.on('mouseleave', layerId, handleMouseLeave);
     });
 
     return () => {
       layers.forEach((layerId) => {
         map.off('click', layerId, handleClusterClick);
-        map.off('mouseenter', layerId, () => {
-          map.getCanvas().style.cursor = 'pointer';
-        });
-        map.off('mouseleave', layerId, () => {
-          map.getCanvas().style.cursor = '';
-        });
+        map.off('mouseenter', layerId, handleMouseEnter);
+        map.off('mouseleave', layerId, handleMouseLeave);
       });
     };
-  }, [map, handleClusterClick]);
+  }, [map, handleClusterClick, handleMouseEnter, handleMouseLeave]);
 
   const handleStationClick = useCallback(
     (station: UnclusteredStation) => {
