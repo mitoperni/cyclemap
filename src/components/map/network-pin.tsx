@@ -25,7 +25,13 @@ export function NetworkPin({ id, name, city, longitude, latitude, onClick }: Net
   );
 
   return (
-    <Marker longitude={longitude} latitude={latitude} anchor="bottom" onClick={handleClick}>
+    <Marker
+      longitude={longitude}
+      latitude={latitude}
+      anchor="bottom"
+      onClick={handleClick}
+      style={{ zIndex: showTooltip ? 50 : 1 }}
+    >
       <div
         className="relative"
         onMouseEnter={() => setShowTooltip(true)}
@@ -34,12 +40,12 @@ export function NetworkPin({ id, name, city, longitude, latitude, onClick }: Net
         {/* Tooltip */}
         {showTooltip && (
           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 whitespace-nowrap z-10">
-            <div className="bg-grenadier-100 text-white text-xs px-3 py-2 rounded shadow-lg">
-              <p className="font-medium text-grenadier-700 mb-1">{name}</p>
-              <p className="font-medium text-grenadier-900">{city}</p>
+            <div className="bg-grenadier-900 text-white text-xs px-3 py-2 rounded shadow-lg">
+              <p className="font-medium text-white mb-1">{name}</p>
+              <p className="font-medium text-white/80">{city}</p>
             </div>
             {/* Tooltip arrow */}
-            <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 bg-grenadier-100 rotate-45" />
+            <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 bg-grenadier-900 rotate-45" />
           </div>
         )}
 
