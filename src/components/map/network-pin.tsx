@@ -39,7 +39,11 @@ export function NetworkPin({ id, name, city, longitude, latitude, onClick }: Net
       >
         {/* Tooltip */}
         {showTooltip && (
-          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 whitespace-nowrap z-10">
+          <div
+            role="tooltip"
+            aria-live="polite"
+            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 whitespace-nowrap z-10"
+          >
             <div className="bg-grenadier-900 text-white text-xs px-3 py-2 rounded shadow-lg">
               <p className="font-medium text-white mb-1">{name}</p>
               <p className="font-medium text-white/80">{city}</p>
