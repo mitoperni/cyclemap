@@ -92,8 +92,13 @@ export function StationClusterMarkers({
   useEffect(() => {
     if (!map) return;
 
+    let rafId: number | null = null;
+
     const handleUpdate = () => {
-      requestAnimationFrame(updateUnclusteredStations);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+      rafId = requestAnimationFrame(updateUnclusteredStations);
     };
 
     map.on('moveend', handleUpdate);
@@ -106,6 +111,9 @@ export function StationClusterMarkers({
     }
 
     return () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
       map.off('moveend', handleUpdate);
       map.off('zoomend', handleUpdate);
       map.off('sourcedata', handleUpdate);
