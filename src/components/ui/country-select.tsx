@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { Popover } from 'radix-ui';
+import * as Popover from '@radix-ui/react-popover';
 import { MapPin, Search } from 'lucide-react';
 import { cn, getCountryName } from '@/lib/utils';
 import { COUNTRY_SELECT } from '@/lib/constants';
