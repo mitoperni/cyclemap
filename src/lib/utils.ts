@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import type { Network, PaginatedResult, StationSort } from '@/types';
 import countriesData from '@/data/countries.json';
-import { PAGINATION } from './constants';
+import { PAGINATION, STATION_NAME_PATTERNS } from './constants';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -29,18 +29,31 @@ export function getUniqueCountries(networks: Network[]): string[] {
 export function cleanStationName(name: string): string {
   let cleaned = name.trim();
 
-  cleaned = cleaned.replace(/^[A-Z0-9]+[\s\-\.]+\s*/, '');
-  cleaned = cleaned.replace(/^[A-Z]{2,4}\s*-\s*/, '');
+  cleaned = cleaned.replace(STATION_NAME_PATTERNS.NUMERIC_PREFIX, '');
+  cleaned = cleaned.replace(STATION_NAME_PATTERNS.CODE_PREFIX, '');
 
   if (cleaned.startsWith('_')) {
-    cleaned = cleaned.replace(/^_+/, '');
-    if (cleaned === cleaned.toUpperCase() && /[A-Z]/.test(cleaned)) {
-      cleaned = cleaned
-        .toLowerCase()
-        .split(' ')
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-    }
+    cleaned = cleaned.replace(STATION_NAME_PATTERNS.LEADING_UNDERSCORES, '');
+    cleaned = cleaned.replace(STATION_NAME_PATTERNS.UNDERSCORES, ' ');
+    cleaned = cleaned.replace(STATION_NAME_PATTERNS.MULTIPLE_SPACES, ' ');
+  }
+
+  cleaned = cleaned.trim();
+  if (cleaned === cleaned.toUpperCase() && /[A-Z]/.test(cleaned) && cleaned.length > 1) {
+    cleaned = cleaned
+      .toLowerCase()
+      .split(' ')
+      .map((word, index) => {
+        if (index > 0 && STATION_NAME_PATTERNS.LOWERCASE_PARTICLES.has(word)) {
+          return word;
+        }
+        const upper = word.toUpperCase();
+        if (upper.length > 0 && STATION_NAME_PATTERNS.ROMAN_NUMERAL.test(upper)) {
+          return upper;
+        }
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(' ');
   }
 
   return cleaned.trim();

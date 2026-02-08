@@ -14,6 +14,22 @@ describe('cleanStationName', () => {
     it('should clean "1 - Primera Estación" → "Primera Estación"', () => {
       expect(cleanStationName('1 - Primera Estación')).toBe('Primera Estación');
     });
+
+    it('should clean "25A - Plaza de Celenque A" (BiciMAD alphanumeric prefix)', () => {
+      expect(cleanStationName('25A - Plaza de Celenque A')).toBe('Plaza de Celenque A');
+    });
+
+    it('should clean "80B - Estación de Atocha B"', () => {
+      expect(cleanStationName('80B - Estación de Atocha B')).toBe('Estación de Atocha B');
+    });
+
+    it('should clean "106B - Plaza de Colón B"', () => {
+      expect(cleanStationName('106B - Plaza de Colón B')).toBe('Plaza de Colón B');
+    });
+
+    it('should clean "111A - Metro Moncloa A"', () => {
+      expect(cleanStationName('111A - Metro Moncloa A')).toBe('Metro Moncloa A');
+    });
   });
 
   describe('removes numeric prefixes with dot separator', () => {
@@ -75,14 +91,14 @@ describe('cleanStationName', () => {
       expect(cleanStationName('ABCD - Four Letter Code')).toBe('Four Letter Code');
     });
 
-    it('should remove alphanumeric prefixes like "ABCDE - Station"', () => {
-      expect(cleanStationName('ABCDE - Station')).toBe('Station');
+    it('should not remove 5+ letter words (not a code prefix)', () => {
+      expect(cleanStationName('ABCDE - Station')).toBe('ABCDE - Station');
     });
   });
 
   describe('handles underscore prefix with ALL CAPS', () => {
-    it('should clean "_CALLE LAS LEANDRAS" → "Calle Las Leandras"', () => {
-      expect(cleanStationName('_CALLE LAS LEANDRAS')).toBe('Calle Las Leandras');
+    it('should clean "_CALLE LAS LEANDRAS" → "Calle las Leandras"', () => {
+      expect(cleanStationName('_CALLE LAS LEANDRAS')).toBe('Calle las Leandras');
     });
 
     it('should clean "__DOUBLE UNDERSCORE" → "Double Underscore"', () => {
@@ -104,6 +120,140 @@ describe('cleanStationName', () => {
     });
   });
 
+  describe('Dublin ALL CAPS names (title-cased)', () => {
+    it('should title-case "WESTERN WAY" → "Western Way"', () => {
+      expect(cleanStationName('WESTERN WAY')).toBe('Western Way');
+    });
+
+    it('should title-case "BOLTON STREET" → "Bolton Street"', () => {
+      expect(cleanStationName('BOLTON STREET')).toBe('Bolton Street');
+    });
+
+    it('should title-case "FITZWILLIAM SQUARE WEST" → "Fitzwilliam Square West"', () => {
+      expect(cleanStationName('FITZWILLIAM SQUARE WEST')).toBe('Fitzwilliam Square West');
+    });
+
+    it('should title-case "PRINCES STREET / O\'CONNELL STREET"', () => {
+      expect(cleanStationName("PRINCES STREET / O'CONNELL STREET")).toBe(
+        "Princes Street / O'connell Street"
+      );
+    });
+
+    it('should title-case "GRANGEGORMAN LOWER (SOUTH)"', () => {
+      expect(cleanStationName('GRANGEGORMAN LOWER (SOUTH)')).toBe('Grangegorman Lower (south)');
+    });
+  });
+
+  describe('Italian particle "di" not confused with roman numeral DI', () => {
+    it('should lowercase "di" in "VIA DI ROMA"', () => {
+      expect(cleanStationName('VIA DI ROMA')).toBe('Via di Roma');
+    });
+  });
+
+  describe('León mixed prefix patterns', () => {
+    it('should preserve and title-case "PARQUE DE LA PLAZA DE LA UNIÓN EUROPEA"', () => {
+      expect(cleanStationName('PARQUE DE LA PLAZA DE LA UNIÓN EUROPEA')).toBe(
+        'Parque de la Plaza de la Unión Europea'
+      );
+    });
+
+    it('should strip numeric prefix from "24 AV. JOSÉ AGUADO"', () => {
+      expect(cleanStationName('24 AV. JOSÉ AGUADO')).toBe('Av. José Aguado');
+    });
+
+    it('should preserve and title-case "DEMETRIO MONTESERIN - PLAZA DEL HUEVO"', () => {
+      expect(cleanStationName('DEMETRIO MONTESERIN - PLAZA DEL HUEVO')).toBe(
+        'Demetrio Monteserin - Plaza del Huevo'
+      );
+    });
+
+    it('should strip numeric prefix from "03 CENTRO CÍVICO EL CRUCERO"', () => {
+      expect(cleanStationName('03 CENTRO CÍVICO EL CRUCERO')).toBe('Centro Cívico el Crucero');
+    });
+
+    it('should preserve and title-case "REINO DE LEON - ROLLO DE SANTA ANA"', () => {
+      expect(cleanStationName('REINO DE LEON - ROLLO DE SANTA ANA')).toBe(
+        'Reino de Leon - Rollo de Santa Ana'
+      );
+    });
+  });
+
+  describe('Barcelona station names with street abbreviations', () => {
+    it('should preserve "C/ SARDENYA, 178" and title-case', () => {
+      expect(cleanStationName('C/ SARDENYA, 178')).toBe('C/ Sardenya, 178');
+    });
+
+    it('should preserve "PG. PUJADES, 2" and title-case', () => {
+      expect(cleanStationName('PG. PUJADES, 2')).toBe('Pg. Pujades, 2');
+    });
+
+    it('should preserve "AV. PARAL.LEL, 54" and title-case', () => {
+      expect(cleanStationName('AV. PARAL.LEL, 54')).toBe('Av. Paral.lel, 54');
+    });
+  });
+
+  describe('Valenbisi underscore-as-separator names', () => {
+    it('should convert "_CALLE_JUAN_XXIII" underscores to spaces and title-case', () => {
+      expect(cleanStationName('_CALLE_JUAN_XXIII')).toBe('Calle Juan XXIII');
+    });
+
+    it('should handle "_AVDA_CID_ANTES_MARCONI"', () => {
+      expect(cleanStationName('_AVDA_CID_ANTES_MARCONI')).toBe('Avda Cid Antes Marconi');
+    });
+
+    it('should handle mixed underscore and space "_AVDA. CONSTITUCIÓN"', () => {
+      expect(cleanStationName('_AVDA. CONSTITUCIÓN')).toBe('Avda. Constitución');
+    });
+
+    it('should handle "_CALLE_VALLE_BALLESTERA_ESQ_PLAZA_POLICIA_LOCAL"', () => {
+      expect(cleanStationName('_CALLE_VALLE_BALLESTERA_ESQ_PLAZA_POLICIA_LOCAL')).toBe(
+        'Calle Valle Ballestera Esq Plaza Policia Local'
+      );
+    });
+
+    it('should lowercase particles: "_PZA AYTO CON CALLE COTANDA"', () => {
+      expect(cleanStationName('_PZA AYTO CON CALLE COTANDA')).toBe('Pza Ayto con Calle Cotanda');
+    });
+
+    it('should preserve roman numerals: "_AVDA. DEL PUERTO I"', () => {
+      expect(cleanStationName('_AVDA. DEL PUERTO I')).toBe('Avda. del Puerto I');
+    });
+
+    it('should preserve roman numerals: "_AVDA. DEL PUERTO II"', () => {
+      expect(cleanStationName('_AVDA. DEL PUERTO II')).toBe('Avda. del Puerto II');
+    });
+
+    it('should preserve roman numerals: "_AVDA. DEL PUERTO III"', () => {
+      expect(cleanStationName('_AVDA. DEL PUERTO III')).toBe('Avda. del Puerto III');
+    });
+  });
+
+  describe('London large numeric prefixes', () => {
+    it('should strip "300073 - " from London station names', () => {
+      expect(cleanStationName('300073 - Prince of Wales Drive, Battersea Park')).toBe(
+        'Prince of Wales Drive, Battersea Park'
+      );
+    });
+  });
+
+  describe('preserves ordinal prefixes', () => {
+    it('should keep "3rd Avenue" unchanged', () => {
+      expect(cleanStationName('3rd Avenue')).toBe('3rd Avenue');
+    });
+
+    it('should keep "1st Street" unchanged', () => {
+      expect(cleanStationName('1st Street')).toBe('1st Street');
+    });
+
+    it('should keep "2nd Boulevard" unchanged', () => {
+      expect(cleanStationName('2nd Boulevard')).toBe('2nd Boulevard');
+    });
+
+    it('should keep "42nd Street" unchanged', () => {
+      expect(cleanStationName('42nd Street')).toBe('42nd Street');
+    });
+  });
+
   describe('edge cases', () => {
     it('should trim whitespace from result', () => {
       expect(cleanStationName('  Station Name  ')).toBe('Station Name');
@@ -121,8 +271,8 @@ describe('cleanStationName', () => {
       expect(cleanStationName('42 - ')).toBe('');
     });
 
-    it('should remove single letter prefix at the start', () => {
-      expect(cleanStationName('A - Station')).toBe('Station');
+    it('should not remove single letter prefix (could be abbreviation)', () => {
+      expect(cleanStationName('A - Station')).toBe('A - Station');
     });
 
     it('should handle multiple dashes in name', () => {
