@@ -52,7 +52,7 @@ export function ClusterMarkers({ networks, onNetworkClick }: ClusterMarkersProps
   }, [networks]);
 
   const updateUnclusteredNetworks = useCallback(() => {
-    if (!map) return;
+    if (!map || !map.isStyleLoaded()) return;
 
     const features = map.querySourceFeatures('networks', {
       filter: ['!', ['has', 'point_count']],
@@ -93,13 +93,18 @@ export function ClusterMarkers({ networks, onNetworkClick }: ClusterMarkersProps
     map.on('moveend', handleUpdate);
     map.on('zoomend', handleUpdate);
     map.on('sourcedata', handleUpdate);
-    handleUpdate();
+    map.on('style.load', handleUpdate);
+
+    if (map.isStyleLoaded()) {
+      handleUpdate();
+    }
 
     return () => {
       if (rafId !== null) cancelAnimationFrame(rafId);
       map.off('moveend', handleUpdate);
       map.off('zoomend', handleUpdate);
       map.off('sourcedata', handleUpdate);
+      map.off('style.load', handleUpdate);
     };
   }, [map, updateUnclusteredNetworks]);
 
