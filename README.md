@@ -92,8 +92,8 @@ The application implements **all required features and all bonus features** from
 | **Tailwind CSS v4**          | Utility-first styling with CSS-first configuration |
 | **Mapbox GL** / react-map-gl | Performant vector tile maps with clustering        |
 | **Zod**                      | Runtime validation of all API responses            |
-| **Radix UI**                 | Accessible, unstyled component primitives          |
-| **Vitest**                   | Fast unit testing with happy-dom                   |
+| **Radix UI Popover**         | Accessible popover primitive for country select    |
+| **Vitest**                   | Fast unit testing with jsdom                       |
 | **Husky** + Commitlint       | Git hooks and conventional commit enforcement      |
 
 ---
@@ -262,9 +262,9 @@ Mapbox GL is loaded via dynamic imports (`next/dynamic`) to keep the initial bun
 
 Both network markers (main view) and station markers (detail view) use clustering to maintain performance when rendering hundreds of points on the map. Clusters are color-coded by size.
 
-### Shadcn/ui vs Radix Primitives
+### Custom UI Components
 
-The challenge specifies Shadcn/ui. I chose to use Radix UI primitives directly, which is the foundation Shadcn/ui is built upon. This provided full control over styling and accessibility patterns while staying true to the spirit of the requirement: accessible, composable component primitives.
+The challenge specifies Shadcn/ui. Instead, all UI components are custom-built with Tailwind CSS, with the single exception of the country select dropdown which uses `@radix-ui/react-popover` for accessible popover positioning. This provided full control over styling while maintaining accessibility patterns (ARIA combobox, keyboard navigation, focus management).
 
 ---
 
