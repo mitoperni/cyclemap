@@ -64,3 +64,7 @@ body {
 .mapboxgl-marker {
   z-index: 1 !important;
 }
+
+.mapboxgl-marker.user-location-marker {
+  pointer-events: none !important;
+}
