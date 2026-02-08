@@ -81,10 +81,14 @@ export function StationsMap({ center }: StationsMapProps) {
     }
   }, []);
 
-  const handleStationClick = useCallback((station: Station) => {
-    stationClickedRef.current = true;
-    setMapClickedStationId(station.id);
-  }, []);
+  const handleStationClick = useCallback(
+    (station: Station) => {
+      stationClickedRef.current = true;
+      clearSelection();
+      setMapClickedStationId(station.id);
+    },
+    [clearSelection]
+  );
 
   const handleClosePopup = useCallback(() => {
     setMapClickedStationId(null);
