@@ -84,8 +84,10 @@ export function ClusterMarkers({ networks, onNetworkClick }: ClusterMarkersProps
   useEffect(() => {
     if (!map) return;
 
+    let rafId: number | null = null;
     const handleUpdate = () => {
-      requestAnimationFrame(updateUnclusteredNetworks);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(updateUnclusteredNetworks);
     };
 
     map.on('moveend', handleUpdate);
@@ -94,6 +96,7 @@ export function ClusterMarkers({ networks, onNetworkClick }: ClusterMarkersProps
     handleUpdate();
 
     return () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
       map.off('moveend', handleUpdate);
       map.off('zoomend', handleUpdate);
       map.off('sourcedata', handleUpdate);
