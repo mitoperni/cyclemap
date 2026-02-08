@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 
+body {
+  font-family: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+}
+
 /* Hide scrollbar globally */
 * {
   -ms-overflow-style: none; /* IE and Edge */
