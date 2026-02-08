@@ -6,6 +6,7 @@ import type { MapRef, ErrorEvent, MapMouseEvent } from 'react-map-gl/mapbox';
 import type { GeoJSONSource } from 'mapbox-gl';
 import { useRouter } from 'next/navigation';
 import { ClusterMarkers } from './cluster-markers';
+import { UserLocationMarker } from './user-location-marker';
 import { MapError } from './map-error';
 import { useFitBounds } from '@/hooks/use-fit-bounds';
 import { useMapLanguage } from '@/hooks/use-map-language';
@@ -158,6 +159,7 @@ export function MapboxMap({ networks }: MapboxMapProps) {
           className="absolute left-8 top-8 z-10 max-xl:left-auto max-xl:right-4 max-xl:top-4"
         />
         <NavigationControl position="bottom-right" showCompass={false} />
+        <UserLocationMarker />
         <ClusterMarkers networks={networks} onNetworkClick={handleNetworkClick} />
       </Map>
     </div>

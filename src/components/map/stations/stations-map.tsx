@@ -6,6 +6,7 @@ import type { MapRef, ErrorEvent } from 'react-map-gl/mapbox';
 import type { Map as MapboxMap } from 'mapbox-gl';
 import { StationClusterMarkers } from './station-cluster-markers';
 import { StationPopup } from './station-popup';
+import { UserLocationMarker } from '../user-location-marker';
 import { MapError } from '../map-error';
 import { NearMeButton } from '@/components/ui/near-me-button';
 import { useStationsSync } from '@/contexts/stations-sync-context';
@@ -146,6 +147,7 @@ export function StationsMap({ center }: StationsMapProps) {
         className="absolute left-8 top-8 z-10 max-xl:left-auto max-xl:right-4 max-xl:top-4"
       />
       <NavigationControl position="bottom-right" showCompass={false} />
+      <UserLocationMarker />
 
       <StationClusterMarkers
         stations={stations}
