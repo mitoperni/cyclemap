@@ -92,6 +92,83 @@ export const GEOLOCATION_CONFIG = {
   },
 } as const;
 
+export const STATION_NAME_PATTERNS = {
+  // Matches numeric prefixes with optional letter suffix: "377 - ", "25A - ", "04. "
+  // Excludes ordinal suffixes (1st, 2nd, 3rd, 4th) via negative lookahead
+  NUMERIC_PREFIX: /^\d+(?!(?:st|nd|rd|th)\b)[A-Za-z]{0,2}[\s\-\.]+\s*/i,
+  // Matches short uppercase code prefixes: "AUH - ", "NYC - "
+  CODE_PREFIX: /^[A-Z]{2,4}\s*-\s*/,
+  // Matches leading underscores
+  LEADING_UNDERSCORES: /^_+/,
+  // Matches any underscore (for replacing with spaces)
+  UNDERSCORES: /_/g,
+  // Matches multiple consecutive spaces
+  MULTIPLE_SPACES: /\s{2,}/g,
+  // Validates a strict roman numeral (I to MMMCMXCIX)
+  ROMAN_NUMERAL: /^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/,
+  // Lowercase particles: prepositions, articles and conjunctions (ES, FR, PT, EN, IT, DE, NL, CA)
+  LOWERCASE_PARTICLES: new Set([
+    'de',
+    'del',
+    'la',
+    'las',
+    'el',
+    'los',
+    'con',
+    'y',
+    'e',
+    'o',
+    'en',
+    'al', // ES
+    'du',
+    'des',
+    'le',
+    'les',
+    'et',
+    'au',
+    'aux', // FR
+    'da',
+    'do',
+    'das',
+    'dos',
+    'na',
+    'no',
+    'nas',
+    'nos', // PT
+    'of',
+    'the',
+    'and',
+    'at',
+    'by',
+    'for',
+    'in',
+    'on',
+    'to', // EN
+    'di',
+    'il',
+    'lo',
+    'gli',
+    'le',
+    'della',
+    'dello',
+    'degli',
+    'delle', // IT
+    'der',
+    'die',
+    'das',
+    'und',
+    'von',
+    'am',
+    'im',
+    'an', // DE
+    'van',
+    'het',
+    'een', // NL
+    'els',
+    'amb', // CA
+  ]),
+} as const;
+
 export const BREAKPOINTS = {
   XL: 1280, // Sidebar collapses below this width
 } as const;
