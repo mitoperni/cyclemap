@@ -13,7 +13,6 @@ import { useStationsSync } from '@/contexts/stations-sync-context';
 import { useMapLanguage } from '@/hooks/use-map-language';
 import { MAP_CONFIG, MAPBOX_CONFIG, GEOLOCATION_CONFIG } from '@/lib/constants';
 import type { Station } from '@/types';
-import 'mapbox-gl/dist/mapbox-gl.css';
 
 interface StationsMapProps {
   center: { latitude: number; longitude: number };

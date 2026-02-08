@@ -148,17 +148,20 @@ export function getAriaSort(
   return columnSort.direction === 'asc' ? 'ascending' : 'descending';
 }
 
-/**
- * Sort networks by distance from a given position
- */
 export function sortNetworksByDistance(
   networks: Network[],
   userLat: number,
   userLon: number
 ): Network[] {
-  return [...networks].sort((a, b) => {
-    const distA = calculateDistance(userLat, userLon, a.location.latitude, a.location.longitude);
-    const distB = calculateDistance(userLat, userLon, b.location.latitude, b.location.longitude);
-    return distA - distB;
-  });
+  const withDistance = networks.map((network) => ({
+    network,
+    distance: calculateDistance(
+      userLat,
+      userLon,
+      network.location.latitude,
+      network.location.longitude
+    ),
+  }));
+  withDistance.sort((a, b) => a.distance - b.distance);
+  return withDistance.map((item) => item.network);
 }
