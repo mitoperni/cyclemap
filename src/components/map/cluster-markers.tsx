@@ -84,27 +84,44 @@ export function ClusterMarkers({ networks, onNetworkClick }: ClusterMarkersProps
   useEffect(() => {
     if (!map) return;
 
+    let debounceTimer: ReturnType<typeof setTimeout> | null = null;
     let rafId: number | null = null;
-    const handleUpdate = () => {
-      if (rafId !== null) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(updateUnclusteredNetworks);
+
+    const scheduleUpdate = () => {
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        updateUnclusteredNetworks();
+      });
     };
 
-    map.on('moveend', handleUpdate);
-    map.on('zoomend', handleUpdate);
-    map.on('sourcedata', handleUpdate);
-    map.on('style.load', handleUpdate);
+    const immediateUpdate = () => {
+      if (debounceTimer !== null) clearTimeout(debounceTimer);
+      scheduleUpdate();
+    };
+
+    const debouncedUpdate = () => {
+      if (debounceTimer !== null) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        debounceTimer = null;
+        scheduleUpdate();
+      }, 100);
+    };
+
+    map.on('moveend', immediateUpdate);
+    map.on('sourcedata', debouncedUpdate);
+    map.on('style.load', immediateUpdate);
 
     if (map.isStyleLoaded()) {
-      handleUpdate();
+      scheduleUpdate();
     }
 
     return () => {
+      if (debounceTimer !== null) clearTimeout(debounceTimer);
       if (rafId !== null) cancelAnimationFrame(rafId);
-      map.off('moveend', handleUpdate);
-      map.off('zoomend', handleUpdate);
-      map.off('sourcedata', handleUpdate);
-      map.off('style.load', handleUpdate);
+      map.off('moveend', immediateUpdate);
+      map.off('sourcedata', debouncedUpdate);
+      map.off('style.load', immediateUpdate);
     };
   }, [map, updateUnclusteredNetworks]);
 

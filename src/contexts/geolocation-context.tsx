@@ -29,7 +29,7 @@ export function GeolocationProvider({ children }: { children: ReactNode }) {
     setError(null);
   }, []);
 
-  const requestLocation = useCallback(() => {
+  const fetchPosition = useCallback((options: PositionOptions) => {
     if (!navigator.geolocation) {
       setError('NOT_SUPPORTED');
       setHasAskedPermission(true);
@@ -84,9 +84,13 @@ export function GeolocationProvider({ children }: { children: ReactNode }) {
           } catch {}
         }
       },
-      GEOLOCATION_CONFIG.DEFAULT_OPTIONS
+      options
     );
   }, []);
+
+  const requestLocation = useCallback(() => {
+    fetchPosition(GEOLOCATION_CONFIG.MANUAL_OPTIONS);
+  }, [fetchPosition]);
 
   useEffect(() => {
     if (hasAutoRequestedRef.current) return;
@@ -101,8 +105,26 @@ export function GeolocationProvider({ children }: { children: ReactNode }) {
       }
     } catch {}
 
-    requestLocation();
-  }, [requestLocation]);
+    if (navigator.permissions) {
+      navigator.permissions
+        .query({ name: 'geolocation' })
+        .then((result) => {
+          if (result.state === 'granted') {
+            fetchPosition(GEOLOCATION_CONFIG.AUTO_OPTIONS);
+          } else if (result.state === 'denied') {
+            setHasAskedPermission(true);
+            setError('PERMISSION_DENIED');
+          }
+          // 'prompt' state: do nothing, let user click "Near Me"
+        })
+        .catch(() => {
+          // Permissions API not available, fall back to auto-request
+          fetchPosition(GEOLOCATION_CONFIG.AUTO_OPTIONS);
+        });
+    } else {
+      fetchPosition(GEOLOCATION_CONFIG.AUTO_OPTIONS);
+    }
+  }, [fetchPosition]);
 
   return (
     <GeolocationContext.Provider

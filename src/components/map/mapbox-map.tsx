@@ -14,7 +14,6 @@ import { useGeolocationContext } from '@/contexts';
 import { MAP_CONFIG, MAPBOX_CONFIG, CLUSTER_CONFIG, GEOLOCATION_CONFIG } from '@/lib/constants';
 import type { Network } from '@/types';
 
-import 'mapbox-gl/dist/mapbox-gl.css';
 import { NearMeButton } from '../ui/near-me-button';
 
 interface MapboxMapProps {

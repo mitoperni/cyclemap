@@ -8,6 +8,7 @@ const poppins = Poppins({
   variable: '--font-poppins',
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -78,6 +79,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://api.mapbox.com" />
+        <link rel="preconnect" href="https://tiles.mapbox.com" />
+        <link rel="preconnect" href="https://events.mapbox.com" />
+      </head>
       <body className={`${poppins.variable} scrollbar-hidden overflow-hidden antialiased`}>
         <JsonLd />
         {children}

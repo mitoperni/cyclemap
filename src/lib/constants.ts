@@ -75,7 +75,12 @@ export const USE_URL_PARAMS = {
 } as const;
 
 export const GEOLOCATION_CONFIG = {
-  DEFAULT_OPTIONS: {
+  AUTO_OPTIONS: {
+    enableHighAccuracy: false,
+    timeout: 5000,
+    maximumAge: 300000,
+  },
+  MANUAL_OPTIONS: {
     enableHighAccuracy: true,
     timeout: 10000,
     maximumAge: 60000,
