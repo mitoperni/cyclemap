@@ -342,17 +342,17 @@ Lighthouse scores (production deployment, Lighthouse 13.0.1):
 
 | Metric             | Mobile | Desktop |
 | ------------------ | ------ | ------- |
-| **Performance**    | 72     | 92      |
-| **Accessibility**  | 88     | 88      |
-| **Best Practices** | 96     | 96      |
+| **Performance**    | 96     | 99      |
+| **Accessibility**  | 100    | 100     |
+| **Best Practices** | 100    | 100     |
 | **SEO**            | 100    | 100     |
 
 | Core Web Vital           | Mobile | Desktop |
 | ------------------------ | ------ | ------- |
-| First Contentful Paint   | 1.4s   | 0.4s    |
-| Largest Contentful Paint | 3.8s   | 1.6s    |
-| Total Blocking Time      | 210ms  | 0ms     |
-| Cumulative Layout Shift  | 0      | 0       |
+| First Contentful Paint   | 1.2s   | 0.3s    |
+| Largest Contentful Paint | 2.6s   | 0.6s    |
+| Total Blocking Time      | 80ms   | 0ms     |
+| Cumulative Layout Shift  | 0.038  | 0.051   |
 
 ### Optimization Strategies
 
