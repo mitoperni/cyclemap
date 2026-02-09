@@ -21,7 +21,7 @@ export function MapPlaceholder({ networks, stations }: MapPlaceholderProps) {
         </div>
 
         <div>
-          <h3 className="text-lg font-semibold text-torea-bay-900">Development Mode</h3>
+          <h2 className="text-lg font-semibold text-torea-bay-900">Development Mode</h2>
           <p className="mt-1 max-w-sm text-sm text-torea-bay-600">
             Mapbox is disabled. Set{' '}
             <code className="rounded bg-torea-bay-100 px-1.5 py-0.5 text-xs">

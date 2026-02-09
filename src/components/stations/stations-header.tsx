@@ -44,7 +44,7 @@ export function StationsHeader({ network }: StationsHeaderProps) {
 
       {/* Network info */}
       <div className="relative z-10 flex flex-col gap-3">
-        <h1 className="text-2xl font-bold text-white">{name}</h1>
+        <h2 className="text-2xl font-bold text-white">{name}</h2>
 
         {/* Location */}
         <div className="flex items-center gap-2 text-sm">

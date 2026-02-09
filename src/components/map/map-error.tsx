@@ -16,7 +16,7 @@ export function MapError({ title = 'Map Error', message, onRetry }: MapErrorProp
           <AlertTriangle className="h-6 w-6 text-red-600" />
         </div>
         <div>
-          <h3 className="text-lg font-semibold text-torea-bay-900">{title}</h3>
+          <h2 className="text-lg font-semibold text-torea-bay-900">{title}</h2>
           <p className="mt-1 text-sm text-torea-bay-600">{message}</p>
         </div>
         {onRetry && (
