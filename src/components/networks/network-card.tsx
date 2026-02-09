@@ -15,6 +15,7 @@ export const NetworkCard = memo(function NetworkCard({ network }: NetworkCardPro
   return (
     <Link
       href={`/network/${id}`}
+      onClick={() => sessionStorage.setItem('previousPath', window.location.search)}
       className="group flex items-center justify-between border-b border-gray-100 py-4 px-6 transition-colors hover:bg-torea-bay-100"
     >
       <div className="flex flex-1 flex-col">

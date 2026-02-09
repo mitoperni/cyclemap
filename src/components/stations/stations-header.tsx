@@ -14,11 +14,9 @@ export function StationsHeader({ network }: StationsHeaderProps) {
   const { name, location, company } = network;
 
   const handleBack = () => {
-    if (window.history.length > 1) {
-      router.back();
-    } else {
-      router.push('/');
-    }
+    const previousSearch = sessionStorage.getItem('previousPath');
+    router.push(`/${previousSearch || ''}`);
+    sessionStorage.removeItem('previousPath');
   };
   const { text: companiesText, remainingCount } = formatCompanies(company);
 
