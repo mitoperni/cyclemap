@@ -7,10 +7,10 @@ import {
   useCallback,
   useMemo,
   useRef,
-  useEffect,
   type ReactNode,
 } from 'react';
 import type { MapRef } from 'react-map-gl/mapbox';
+import { useDebouncedCallback } from 'use-debounce';
 import type { Station, PaginationInfo, StationSort } from '@/types';
 import { MAP_CONFIG, PAGINATION } from '@/lib/constants';
 import { calculateDistance, paginateItems } from '@/lib/utils';
@@ -54,7 +54,6 @@ export function StationsSyncProvider({
   const [currentPage, setCurrentPage] = useState(1);
   const [columnSort, setColumnSort] = useState<StationSort | null>(null);
   const mapRefInternal = useRef<MapRef | null>(null);
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const stationLookup = useMemo(() => {
     const lookup = new Map<string, Station>();
@@ -107,14 +106,9 @@ export function StationsSyncProvider({
     mapRefInternal.current = ref;
   }, []);
 
-  const updateMapCenter = useCallback((center: MapCenter) => {
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-    debounceTimerRef.current = setTimeout(() => {
-      setMapCenter(center);
-    }, 150);
-  }, []);
+  const updateMapCenter = useDebouncedCallback((center: MapCenter) => {
+    setMapCenter(center);
+  }, 150);
 
   const flyToStation = useCallback(
     (stationId: string) => {
@@ -148,14 +142,6 @@ export function StationsSyncProvider({
       return { field, direction: 'desc' }; // First click = descending
     });
     setCurrentPage(1); // Reset to page 1 when sort changes
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
-      }
-    };
   }, []);
 
   const value = useMemo(
