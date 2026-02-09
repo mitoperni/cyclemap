@@ -15,7 +15,10 @@ export function StationsHeader({ network }: StationsHeaderProps) {
   const { name, location, company } = network;
 
   const handleBack = () => {
-    if (window.history.length > 1) {
+    const isSameOrigin =
+      document.referrer && new URL(document.referrer).origin === window.location.origin;
+
+    if (isSameOrigin) {
       router.back();
     } else {
       router.push('/');
