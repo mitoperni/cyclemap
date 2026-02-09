@@ -9,9 +9,10 @@ vi.mock('@/contexts/stations-sync-context', () => ({
 }));
 
 // Mock the layout constant
-vi.mock('@/components/layout/sidebar-station', () => ({
-  STATIONS_SCROLL_CONTAINER_ID: 'mock-scroll-container',
-}));
+vi.mock('@/lib/constants', async () => {
+  const actual = await vi.importActual('@/lib/constants');
+  return { ...actual, STATIONS_SCROLL_CONTAINER_ID: 'mock-scroll-container' };
+});
 
 import { useStationsSync } from '@/contexts/stations-sync-context';
 

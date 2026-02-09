@@ -1,6 +1,6 @@
 'use client';
 
-import { SidebarStation } from '@/components/layout/sidebar-station';
+import { Sidebar } from '@/components/layout/sidebar';
 import { StationsHeader } from '@/components/stations/stations-header';
 import { StationsTable } from '@/components/stations/stations-table';
 import { StationsMapContainer } from '@/components/map';
@@ -23,10 +23,10 @@ export function NetworkDetailClient({ network }: NetworkDetailClientProps) {
     <StationsSyncProvider stations={network.stations} initialCenter={center}>
       <SidebarProvider>
         <div className="h-screen lg:flex lg:flex-row">
-          <SidebarStation>
+          <Sidebar variant="stations">
             <StationsHeader network={network} />
             <StationsTable />
-          </SidebarStation>
+          </Sidebar>
 
           <main className="absolute inset-0 lg:relative lg:flex-1">
             <SidebarOpenButton className="absolute left-4 top-4 z-20" variant="dark" />

@@ -172,6 +172,31 @@ export const BREAKPOINTS = {
   XL: 1280, // Sidebar collapses below this width
 } as const;
 
+export const STATIONS_SCROLL_CONTAINER_ID = 'stations-scroll-container';
+
+export const SIDEBAR_VARIANT_CONFIG = {
+  networks: {
+    bg: 'bg-white',
+    ariaLabel: 'Bike networks panel',
+    xlPadding: 'xl:px-[40px] xl:pt-[40px]',
+    mobilePadding: 'px-[40px] pt-[40px]',
+    closeButtonVariant: 'light' as const,
+    closeButtonClass: 'absolute right-4 top-4',
+    scrollContainerId: 'networks-scroll-container',
+    showHeader: true,
+  },
+  stations: {
+    bg: 'bg-torea-bay-800',
+    ariaLabel: 'Stations panel',
+    xlPadding: '',
+    mobilePadding: '',
+    closeButtonVariant: 'dark' as const,
+    closeButtonClass: 'absolute right-4 top-4 z-10',
+    scrollContainerId: STATIONS_SCROLL_CONTAINER_ID,
+    showHeader: false,
+  },
+} as const;
+
 // Top popular bike sharing networks worldwide (2025-2026 data)
 // Used for static generation at build time
 export const POPULAR_NETWORK_IDS = [
