@@ -18,7 +18,9 @@ export default function GlobalError({ error, reset }: ErrorProps) {
         <h1 className="mt-6 text-2xl font-bold text-torea-bay-800">Something went wrong</h1>
 
         <p className="mt-2 text-muted-foreground">
-          {error.message || "We couldn't load the page. Please try again."}
+          {process.env.NODE_ENV === 'development'
+            ? error.message
+            : "We couldn't load the page. Please try again."}
         </p>
 
         <button
