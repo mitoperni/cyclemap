@@ -5,7 +5,7 @@ import { BREAKPOINTS } from '@/lib/constants';
 
 export function useSidebar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLargeScreen, setIsLargeScreen] = useState(true);
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const resizeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
