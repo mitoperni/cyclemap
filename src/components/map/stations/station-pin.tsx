@@ -53,6 +53,8 @@ export const StationPin = memo(
           <button
             className="group flex flex-col items-center focus:outline-none cursor-pointer"
             aria-label={`View station ${cleanName}`}
+            onFocus={() => setShowTooltip(true)}
+            onBlur={() => setShowTooltip(false)}
           >
             <div className="relative">
               {/* Pin head */}

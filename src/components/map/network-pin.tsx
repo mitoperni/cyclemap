@@ -57,6 +57,8 @@ export function NetworkPin({ id, name, city, longitude, latitude, onClick }: Net
         <button
           className="group flex flex-col items-center focus:outline-none cursor-pointer"
           aria-label={`View ${name} network in ${city}`}
+          onFocus={() => setShowTooltip(true)}
+          onBlur={() => setShowTooltip(false)}
         >
           <div className="relative">
             {/* Pin head */}
