@@ -448,16 +448,16 @@ describe('getAriaSort', () => {
 });
 
 describe('formatCompanies', () => {
-  it('should return empty text and negative remainingCount for empty array', () => {
+  it('should return empty text and zero remainingCount for empty array', () => {
     const result = formatCompanies([]);
     expect(result.text).toBe('');
-    expect(result.remainingCount).toBeLessThanOrEqual(0);
+    expect(result.remainingCount).toBe(0);
   });
 
   it('should return single company with no remaining', () => {
     const result = formatCompanies(['Acme Corp']);
     expect(result.text).toBe('Acme Corp');
-    expect(result.remainingCount).toBeLessThanOrEqual(0);
+    expect(result.remainingCount).toBe(0);
   });
 
   it('should return exactly MAX companies with no remaining', () => {

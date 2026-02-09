@@ -152,7 +152,7 @@ export function formatCompanies(companies: string[]) {
   const visible = companies.slice(0, NETWORK_CARD.MAX_VISIBLE_COMPANIES);
   return {
     text: visible.join(', '),
-    remainingCount: companies.length - NETWORK_CARD.MAX_VISIBLE_COMPANIES,
+    remainingCount: Math.max(0, companies.length - NETWORK_CARD.MAX_VISIBLE_COMPANIES),
   };
 }
 
