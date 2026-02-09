@@ -366,7 +366,7 @@ describe('fetchNetworks', () => {
         next: { revalidate: CACHE_TIMES.NETWORKS },
       })
     );
-    expect(CACHE_TIMES.NETWORKS).toBe(300); // Verify it's 5 minutes
+    expect(CACHE_TIMES.NETWORKS).toBe(86400); // Verify it's 24 hours
   });
 
   it('should handle empty networks array', async () => {
