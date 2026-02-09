@@ -1,8 +1,7 @@
 import { memo } from 'react';
 import Link from 'next/link';
 import { MapPin, Building2, ArrowRight } from 'lucide-react';
-import { NETWORK_CARD } from '@/lib/constants';
-import { getCountryName } from '@/lib/utils';
+import { formatCompanies, getCountryName } from '@/lib/utils';
 import type { Network } from '@/types';
 
 interface NetworkCardProps {
@@ -11,9 +10,7 @@ interface NetworkCardProps {
 
 export const NetworkCard = memo(function NetworkCard({ network }: NetworkCardProps) {
   const { id, name, location, company } = network;
-  const visibleCompanies = company.slice(0, NETWORK_CARD.MAX_VISIBLE_COMPANIES);
-  const remainingCount = company.length - NETWORK_CARD.MAX_VISIBLE_COMPANIES;
-  const companiesText = visibleCompanies.join(', ');
+  const { text: companiesText, remainingCount } = formatCompanies(company);
 
   return (
     <Link
