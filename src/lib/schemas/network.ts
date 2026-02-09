@@ -40,8 +40,3 @@ export const NetworkDetailResponseSchema = z.object({
     ebikes: z.boolean().optional(),
   }),
 });
-
-// Type inference from schemas
-export type NetworkFromSchema = z.infer<typeof NetworkSchema>;
-export type StationFromSchema = z.infer<typeof StationSchema>;
-export type LocationFromSchema = z.infer<typeof LocationSchema>;
