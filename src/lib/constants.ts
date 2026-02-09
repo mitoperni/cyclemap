@@ -6,7 +6,7 @@ export const BASE_URL = (process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3
 export const API_BASE = 'https://api.citybik.es/v2';
 
 export const CACHE_TIMES = {
-  NETWORKS: 300, // 5 minutes
+  NETWORKS: 86400, // 24 hours
   NETWORK_DETAIL: 60, // 1 minute
 } as const;
 
