@@ -6,7 +6,7 @@ import { BASE_URL, POPULAR_NETWORK_IDS } from '@/lib/constants';
 import { NetworkDetailClient } from './network-detail-client';
 import { GeolocationProvider } from '@/contexts';
 import { JsonLd } from '@/components/seo/json-ld';
-import { NetworkWithStations } from '@/types';
+import type { NetworkWithStations } from '@/types';
 
 export async function generateStaticParams() {
   return POPULAR_NETWORK_IDS.map((id) => ({ id }));
