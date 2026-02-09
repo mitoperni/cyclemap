@@ -25,27 +25,19 @@ describe('useUrlParams', () => {
   });
 
   describe('initial state', () => {
-    it('should return empty filters when no URL params exist', () => {
+    it('should return empty values when no URL params exist', () => {
       const { result } = renderHook(() => useUrlParams());
 
-      expect(result.current.filters).toEqual({
-        country: undefined,
-        search: undefined,
-      });
       expect(result.current.searchValue).toBe('');
       expect(result.current.countryValue).toBe('');
     });
 
-    it('should return filters from URL params', () => {
+    it('should return values from URL params', () => {
       mockSearchParams.set('country', 'ES');
       mockSearchParams.set('search', 'bici');
 
       const { result } = renderHook(() => useUrlParams());
 
-      expect(result.current.filters).toEqual({
-        country: 'ES',
-        search: 'bici',
-      });
       expect(result.current.searchValue).toBe('bici');
       expect(result.current.countryValue).toBe('ES');
     });
