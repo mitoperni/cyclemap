@@ -75,11 +75,6 @@ export const USE_URL_PARAMS = {
 } as const;
 
 export const GEOLOCATION_CONFIG = {
-  AUTO_OPTIONS: {
-    enableHighAccuracy: false,
-    timeout: 5000,
-    maximumAge: 300000,
-  },
   MANUAL_OPTIONS: {
     enableHighAccuracy: true,
     timeout: 10000,
@@ -87,7 +82,6 @@ export const GEOLOCATION_CONFIG = {
   },
   NETWORK_ZOOM: 11,
   STATION_ZOOM: 16,
-  STORAGE_KEY: 'cyclemap-geolocation-asked',
   ERROR_MESSAGES: {
     PERMISSION_DENIED:
       'Location access was denied. Please enable location permissions in your browser settings.',
