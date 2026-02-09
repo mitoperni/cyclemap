@@ -4,11 +4,11 @@ import { MapSkeleton } from '@/components/map/map-skeleton';
 
 export default function Loading() {
   return (
-    <div className="flex h-screen flex-col lg:flex-row">
+    <div className="flex h-screen">
       <Sidebar variant="networks">
         <NetworkListSkeleton />
       </Sidebar>
-      <main className="relative min-h-[300px] flex-1 lg:min-h-0">
+      <main className="relative flex-1">
         <MapSkeleton />
       </main>
     </div>
