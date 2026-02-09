@@ -22,8 +22,8 @@ export function SidebarProvider({ children }: { children: ReactNode }) {
 
 const defaultSidebarState: SidebarContextValue = {
   isOpen: false,
-  isLargeScreen: true,
-  shouldShowSidebar: true,
+  isLargeScreen: false,
+  shouldShowSidebar: false,
   hasMounted: false,
   toggle: () => {},
   open: () => {},
