@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import type { Network, PaginatedResult, StationSort } from '@/types';
 import countriesData from '@/data/countries.json';
-import { PAGINATION, STATION_NAME_PATTERNS } from './constants';
+import { NETWORK_CARD, PAGINATION, STATION_NAME_PATTERNS } from './constants';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -146,6 +146,14 @@ export function getAriaSort(
 ): 'none' | 'ascending' | 'descending' {
   if (columnSort?.field !== field) return 'none';
   return columnSort.direction === 'asc' ? 'ascending' : 'descending';
+}
+
+export function formatCompanies(companies: string[]) {
+  const visible = companies.slice(0, NETWORK_CARD.MAX_VISIBLE_COMPANIES);
+  return {
+    text: visible.join(', '),
+    remainingCount: companies.length - NETWORK_CARD.MAX_VISIBLE_COMPANIES,
+  };
 }
 
 export function sortNetworksByDistance(

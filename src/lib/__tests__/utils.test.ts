@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { cleanStationName, paginateItems, parsePageParam, getAriaSort } from '../utils';
+import {
+  cleanStationName,
+  formatCompanies,
+  paginateItems,
+  parsePageParam,
+  getAriaSort,
+} from '../utils';
 
 describe('cleanStationName', () => {
   describe('removes numeric prefixes with dash separator', () => {
@@ -438,5 +444,37 @@ describe('getAriaSort', () => {
     expect(getAriaSort({ field: 'empty_slots', direction: 'desc' }, 'empty_slots')).toBe(
       'descending'
     );
+  });
+});
+
+describe('formatCompanies', () => {
+  it('should return empty text and negative remainingCount for empty array', () => {
+    const result = formatCompanies([]);
+    expect(result.text).toBe('');
+    expect(result.remainingCount).toBeLessThanOrEqual(0);
+  });
+
+  it('should return single company with no remaining', () => {
+    const result = formatCompanies(['Acme Corp']);
+    expect(result.text).toBe('Acme Corp');
+    expect(result.remainingCount).toBeLessThanOrEqual(0);
+  });
+
+  it('should return exactly MAX companies with no remaining', () => {
+    const result = formatCompanies(['Acme Corp', 'Beta Inc']);
+    expect(result.text).toBe('Acme Corp, Beta Inc');
+    expect(result.remainingCount).toBe(0);
+  });
+
+  it('should truncate and report remaining when exceeding MAX', () => {
+    const result = formatCompanies(['Acme Corp', 'Beta Inc', 'Gamma Ltd']);
+    expect(result.text).toBe('Acme Corp, Beta Inc');
+    expect(result.remainingCount).toBe(1);
+  });
+
+  it('should handle many companies', () => {
+    const result = formatCompanies(['A', 'B', 'C', 'D', 'E']);
+    expect(result.text).toBe('A, B');
+    expect(result.remainingCount).toBe(3);
   });
 });

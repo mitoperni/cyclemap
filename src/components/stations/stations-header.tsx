@@ -2,8 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, MapPin, Building2 } from 'lucide-react';
-import { getCountryName } from '@/lib/utils';
-import { NETWORK_CARD } from '@/lib/constants';
+import { formatCompanies, getCountryName } from '@/lib/utils';
 import type { NetworkWithStations } from '@/types';
 
 interface StationsHeaderProps {
@@ -21,9 +20,7 @@ export function StationsHeader({ network }: StationsHeaderProps) {
       router.push('/');
     }
   };
-  const visibleCompanies = company.slice(0, NETWORK_CARD.MAX_VISIBLE_COMPANIES);
-  const remainingCount = company.length - NETWORK_CARD.MAX_VISIBLE_COMPANIES;
-  const companiesText = visibleCompanies.join(', ');
+  const { text: companiesText, remainingCount } = formatCompanies(company);
 
   return (
     <div className="relative flex flex-col gap-6 px-10 py-8 min-h-[252px]">
