@@ -19,7 +19,9 @@ export default function NetworkDetailError({ error, reset }: ErrorProps) {
         <h1 className="mt-6 text-2xl font-bold text-torea-bay-800">Failed to load network</h1>
 
         <p className="mt-2 text-muted-foreground">
-          {error.message || "We couldn't load the network details. Please try again."}
+          {process.env.NODE_ENV === 'development'
+            ? error.message
+            : "We couldn't load the network details. Please try again."}
         </p>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
