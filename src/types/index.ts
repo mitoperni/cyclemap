@@ -18,7 +18,7 @@ export interface Network {
   id: string;
   name: string;
   href: string;
-  location: Location;
+  location: NetworkLocation;
   company: string[];
   gbfs_href?: string;
 }
@@ -28,7 +28,7 @@ export interface NetworkWithStations extends Network {
   ebikes?: boolean;
 }
 
-export interface Location {
+export interface NetworkLocation {
   city: string;
   country: string;
   latitude: number;
@@ -70,33 +70,6 @@ export interface StationSort {
 // ============================================
 // Component Props Types
 // ============================================
-
-export interface NetworkCardProps {
-  network: Network;
-  isActive?: boolean;
-}
-
-export interface NetworkListProps {
-  networks: Network[];
-  isLoading?: boolean;
-}
-
-export interface NetworkFiltersProps {
-  countries: Country[];
-  initialCountry?: string;
-  initialSearch?: string;
-}
-
-export interface MapContainerProps {
-  networks: Network[];
-  onNetworkSelect?: (networkId: string) => void;
-  selectedNetworkId?: string;
-}
-
-export interface StationsTableProps {
-  stations: Station[];
-  isLoading?: boolean;
-}
 
 export interface MapPopupProps {
   station: Station;
