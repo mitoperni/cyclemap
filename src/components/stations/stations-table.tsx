@@ -6,7 +6,7 @@ import { Pagination } from '@/components/ui/pagination';
 import { SortIcon } from '@/components/ui/sort-icon';
 import { useStationsSync } from '@/contexts/stations-sync-context';
 import { useSidebarContext } from '@/contexts/sidebar-context';
-import { STATIONS_SCROLL_CONTAINER_ID } from '@/components/layout/sidebar-station';
+import { STATIONS_SCROLL_CONTAINER_ID } from '@/lib/constants';
 import { getAriaSort } from '@/lib/utils';
 
 export function StationsTable() {

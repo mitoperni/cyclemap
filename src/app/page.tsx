@@ -15,7 +15,7 @@ export default async function Home() {
       <FilteredNetworksProvider networks={networks}>
         <SidebarProvider>
           <div className="h-screen lg:flex lg:flex-row">
-            <Sidebar>
+            <Sidebar variant="networks">
               <NetworkSidebar countries={countries} />
             </Sidebar>
 
