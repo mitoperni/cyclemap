@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: NetworkDetailPageProps): Prom
   try {
     const network = await getNetworkDetail(id);
     const title = `${network.name} - Bike Sharing in ${network.location.city}`;
-    const description = `Explore ${network.name} bike sharing network in ${network.location.city}, ${network.location.country}. Find ${network.stations?.length || 0} stations, check bike availability, and plan your ride.`;
+    const description = `Explore ${network.name} bike sharing network in ${network.location.city}, ${network.location.country}. Find ${network.stations.length} stations, check bike availability, and plan your ride.`;
 
     return {
       title,
