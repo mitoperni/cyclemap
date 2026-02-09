@@ -38,7 +38,7 @@ export function NetworkFilters({ countries }: NetworkFiltersProps) {
   };
 
   return (
-    <div className="sticky top-0 z-10 bg-white py-2">
+    <div className="sticky top-0 bg-white py-2">
       <div className="flex gap-2">
         <Input
           type="text"
