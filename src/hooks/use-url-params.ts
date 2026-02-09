@@ -15,13 +15,6 @@ export function useUrlParams() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const getFilters = useCallback((): NetworkFilters => {
-    return {
-      country: searchParams.get('country') || undefined,
-      search: searchParams.get('search') || undefined,
-    };
-  }, [searchParams]);
-
   const updateParams = useCallback(
     (updates: UrlParamsUpdate) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -67,7 +60,6 @@ export function useUrlParams() {
   }, [router]);
 
   return {
-    filters: getFilters(),
     searchValue: searchParams.get('search') || '',
     countryValue: searchParams.get('country') || '',
     page: parsePageParam(searchParams.get('page')),
