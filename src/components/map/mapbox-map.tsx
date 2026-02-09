@@ -57,6 +57,7 @@ export function MapboxMap({ networks }: MapboxMapProps) {
 
   const handleNetworkClick = useCallback(
     (networkId: string) => {
+      sessionStorage.setItem('previousPath', window.location.search);
       router.push(`/network/${networkId}`);
     },
     [router]
