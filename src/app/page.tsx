@@ -14,12 +14,12 @@ export default async function Home() {
     <GeolocationProvider>
       <FilteredNetworksProvider networks={networks}>
         <SidebarProvider>
-          <div className="h-screen lg:flex lg:flex-row">
+          <div className="h-screen flex">
             <Sidebar variant="networks">
               <NetworkSidebar countries={countries} />
             </Sidebar>
 
-            <main className="absolute inset-0 lg:relative lg:flex-1">
+            <main className="absolute inset-0 xl:relative xl:flex-1">
               <SidebarOpenButton className="absolute left-4 top-4 z-20" variant="light" />
               <MapContainer />
             </main>
