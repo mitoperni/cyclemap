@@ -18,7 +18,7 @@ export interface Network {
   id: string;
   name: string;
   href: string;
-  location: Location;
+  location: NetworkLocation;
   company: string[];
   gbfs_href?: string;
 }
@@ -28,7 +28,7 @@ export interface NetworkWithStations extends Network {
   ebikes?: boolean;
 }
 
-export interface Location {
+export interface NetworkLocation {
   city: string;
   country: string;
   latitude: number;
