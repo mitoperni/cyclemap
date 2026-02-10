@@ -78,7 +78,7 @@ The application implements **all required features and all bonus features** from
 - Fully responsive layout (sidebar collapses on mobile)
 - SEO optimized with Open Graph, Twitter cards, JSON-LD structured data, and dynamic sitemap
 - Accessible: ARIA patterns, keyboard navigation, semantic HTML
-- Static generation for 42 popular networks via ISR
+- Static generation for 35 popular networks via ISR
 
 ---
 
@@ -159,70 +159,90 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ```
 src/
-├── app/                           # Next.js App Router pages
-│   ├── page.tsx                   # Home - Map + network list sidebar
-│   ├── layout.tsx                 # Root layout with metadata & fonts
-│   ├── globals.css                # Global styles & Tailwind
-│   ├── loading.tsx                # Global loading state
-│   ├── error.tsx                  # Global error boundary
-│   ├── sitemap.ts                 # Dynamic sitemap generation
-│   ├── robots.ts                  # Robots.txt configuration
-│   ├── manifest.ts                # PWA manifest
-│   └── network/[id]/              # Network detail pages
-│       ├── page.tsx               # Server component with data fetching
-│       ├── network-detail-client.tsx  # Client component with interactivity
-│       ├── loading.tsx            # Network loading skeleton
-│       ├── error.tsx              # Network error boundary
-│       └── not-found.tsx          # 404 for invalid network IDs
+├── app/                              # Next.js App Router pages
+│   ├── page.tsx                      # Home - Map + network list sidebar
+│   ├── layout.tsx                    # Root layout with metadata & fonts
+│   ├── globals.css                   # Global styles & Tailwind
+│   ├── loading.tsx                   # Global loading state
+│   ├── error.tsx                     # Global error boundary
+│   ├── sitemap.ts                    # Dynamic sitemap generation
+│   ├── robots.ts                     # Robots.txt configuration
+│   ├── manifest.ts                   # PWA manifest
+│   └── network/[id]/                 # Network detail pages
+│       ├── page.tsx                  # Server component with data fetching
+│       ├── network-detail-client.tsx # Client component with interactivity
+│       ├── loading.tsx               # Network loading skeleton
+│       ├── error.tsx                 # Network error boundary
+│       └── not-found.tsx             # 404 for invalid network IDs
 ├── components/
-│   ├── map/                       # Mapbox map components
-│   │   ├── mapbox-map.tsx         # Main map implementation
-│   │   ├── map-container.tsx      # Dynamic import wrapper
-│   │   ├── cluster-markers.tsx    # Network clustering on map
-│   │   ├── network-pin.tsx        # Individual network marker
-│   │   └── stations/              # Station map (detail view)
-│   ├── networks/                  # Network list components
-│   │   ├── network-list.tsx       # Paginated network list
-│   │   ├── network-card.tsx       # Individual network card
-│   │   ├── network-filters.tsx    # Search + country filter
-│   │   └── network-sidebar.tsx    # Sidebar container
-│   ├── stations/                  # Station table components
-│   │   ├── stations-table.tsx     # Sortable stations table
-│   │   ├── station-row.tsx        # Individual station row
-│   │   └── stations-header.tsx    # Table header with sort controls
-│   ├── ui/                        # Reusable UI primitives
-│   │   ├── input.tsx              # Text input component
-│   │   ├── country-select.tsx     # Accessible combobox dropdown
-│   │   ├── pagination.tsx         # Pagination controls
-│   │   ├── near-me-button.tsx     # Geolocation button
-│   │   └── sort-icon.tsx          # Sort direction indicator
-│   ├── layout/                    # Layout components
-│   │   ├── sidebar.tsx            # Collapsible sidebar
-│   │   └── header.tsx             # App header
+│   ├── map/                          # Mapbox map components
+│   │   ├── mapbox-map.tsx            # Main map implementation
+│   │   ├── map-container.tsx         # Dynamic import wrapper (lazy loading)
+│   │   ├── cluster-markers.tsx       # Network clustering on map
+│   │   ├── network-pin.tsx           # Individual network marker
+│   │   ├── map-skeleton.tsx          # Animated map loading placeholder
+│   │   ├── map-error.tsx             # Map error state
+│   │   ├── map-placeholder.tsx       # Map placeholder (dev mode)
+│   │   ├── user-location-marker.tsx  # User geolocation marker
+│   │   └── stations/                 # Station map (detail view)
+│   │       ├── stations-map.tsx      # Station map implementation
+│   │       ├── stations-map-container.tsx  # Dynamic import wrapper
+│   │       ├── station-cluster-markers.tsx # Station clustering on map
+│   │       ├── station-pin.tsx       # Individual station marker
+│   │       └── station-popup.tsx     # Station details popup
+│   ├── networks/                     # Network list components
+│   │   ├── network-sidebar.tsx       # Sidebar container
+│   │   ├── network-list.tsx          # Paginated network list
+│   │   ├── network-card.tsx          # Individual network card
+│   │   ├── network-filters.tsx       # Search + country filter
+│   │   ├── network-list-skeleton.tsx # Network list loading placeholder
+│   │   └── networks-intro.tsx        # Networks section header
+│   ├── stations/                     # Station table components
+│   │   ├── stations-table.tsx        # Sortable stations table
+│   │   ├── stations-header.tsx       # Table header with sort controls
+│   │   ├── station-row.tsx           # Individual station row
+│   │   └── stations-table-skeleton.tsx # Stations table loading placeholder
+│   ├── ui/                           # Reusable UI primitives
+│   │   ├── input.tsx                 # Text input component
+│   │   ├── country-select.tsx        # Accessible combobox dropdown
+│   │   ├── pagination.tsx            # Pagination controls
+│   │   ├── pagination-item.tsx       # Page number button
+│   │   ├── previous-pagination.tsx   # Previous page button
+│   │   ├── next-pagination.tsx       # Next page button
+│   │   ├── near-me-button.tsx        # Geolocation button
+│   │   ├── sort-icon.tsx             # Sort direction indicator
+│   │   ├── sidebar-open-button.tsx   # Mobile sidebar open trigger
+│   │   └── sidebar-close-button.tsx  # Mobile sidebar close trigger
+│   ├── layout/                       # Layout components
+│   │   ├── sidebar.tsx               # Collapsible sidebar
+│   │   └── header.tsx                # App header
 │   └── seo/
-│       └── json-ld.tsx            # Structured data for SEO
-├── contexts/                      # React Context providers
-│   ├── filtered-networks-context.tsx  # Search, filter & pagination state
-│   ├── geolocation-context.tsx    # User location with permission handling
-│   ├── sidebar-context.tsx        # Sidebar open/close state
-│   └── stations-sync-context.tsx  # Station selection & sorting sync
-├── hooks/                         # Custom React hooks
-│   ├── use-url-params.ts          # URL search params management
-│   ├── use-fit-bounds.ts          # Map bounds fitting
-│   ├── use-map-language.ts        # Map label localization
-│   └── use-sidebar.ts            # Sidebar state hook
+│       └── json-ld.tsx               # Structured data for SEO
+├── contexts/                         # React Context providers
+│   ├── filtered-networks-context.tsx # Search, filter & pagination state
+│   ├── geolocation-context.tsx       # User location with permission handling
+│   ├── sidebar-context.tsx           # Sidebar open/close state
+│   └── stations-sync-context.tsx     # Station selection & sorting sync
+├── hooks/                            # Custom React hooks
+│   ├── use-url-params.ts             # URL search params management
+│   ├── use-fit-bounds.ts             # Map bounds fitting
+│   ├── use-map-language.ts           # Map label localization
+│   └── use-sidebar.ts               # Sidebar state hook
 ├── lib/
-│   ├── api/                       # API client functions
-│   │   ├── networks.ts            # Fetch & filter all networks
-│   │   └── network-detail.ts      # Fetch individual network with stations
-│   ├── schemas/                   # Zod validation schemas
-│   │   └── network.ts             # Network & station schemas
-│   ├── utils.ts                   # Utility functions (distance, pagination, etc.)
-│   └── constants.ts               # App-wide configuration & constants
+│   ├── api/                          # API client functions
+│   │   ├── networks.ts               # Fetch & filter all networks
+│   │   └── network-detail.ts         # Fetch individual network with stations
+│   ├── schemas/                      # Zod validation schemas
+│   │   └── network.ts                # Network & station schemas
+│   ├── utils.ts                      # Utility functions (distance, pagination, etc.)
+│   └── constants.ts                  # App-wide configuration & constants
 ├── types/
-│   └── index.ts                   # TypeScript type definitions
+│   └── index.ts                      # TypeScript type definitions
 └── data/
-    └── countries.json             # Country code to name mappings
+    └── countries.json                # Country code to name mappings
+
+# Barrel exports (index.ts) and test files (__tests__/) omitted for brevity.
+# Tests are co-located next to the code they cover.
 ```
 
 ---
@@ -248,7 +268,7 @@ Four focused contexts manage client-side state:
 
 ### ISR + Static Generation
 
-42 popular networks are pre-built at deploy time via `generateStaticParams`. Other networks are generated on-demand with Incremental Static Regeneration. Network list caches for 5 minutes, individual network details for 1 minute.
+35 popular networks are pre-built at deploy time via `generateStaticParams`. Other networks are generated on-demand with Incremental Static Regeneration. Network list caches for 24 hours, individual network details for 1 minute.
 
 ### Zod Schema Validation
 
@@ -276,7 +296,7 @@ This project uses the [CityBikes API](https://api.citybik.es/v2/) for bicycle sh
 
 | Endpoint                     | Description                                 | Cache |
 | ---------------------------- | ------------------------------------------- | ----- |
-| `GET /networks`              | List all bicycle sharing networks worldwide | 5 min |
+| `GET /networks`              | List all bicycle sharing networks worldwide | 24 h  |
 | `GET /networks/{network_id}` | Get network details with all stations       | 1 min |
 
 The API does not support server-side pagination or filtering, so all filtering, searching, and pagination is implemented client-side after fetching the full dataset.
@@ -342,8 +362,8 @@ Lighthouse scores (production deployment, Lighthouse 13.0.1):
 
 | Metric             | Mobile | Desktop |
 | ------------------ | ------ | ------- |
-| **Performance**    | 96     | 99      |
-| **Accessibility**  | 100    | 100     |
+| **Performance**    | 96     | 100     |
+| **Accessibility**  | 100    | 96      |
 | **Best Practices** | 100    | 100     |
 | **SEO**            | 100    | 100     |
 
@@ -351,16 +371,34 @@ Lighthouse scores (production deployment, Lighthouse 13.0.1):
 | ------------------------ | ------ | ------- |
 | First Contentful Paint   | 1.2s   | 0.3s    |
 | Largest Contentful Paint | 2.6s   | 0.6s    |
-| Total Blocking Time      | 80ms   | 0ms     |
-| Cumulative Layout Shift  | 0.038  | 0.051   |
+| Total Blocking Time      | 50ms   | 0ms     |
+| Cumulative Layout Shift  | 0      | 0       |
 
 ### Optimization Strategies
 
-- **ISR** for popular networks, reducing server load and improving TTFB
-- **Lazy loading** Mapbox GL via dynamic imports to reduce initial bundle
-- **Marker clustering** for rendering large datasets on the map
-- **Debounced search** (300ms) to avoid excessive re-renders during typing
-- **Server-side data fetching** with Next.js caching
+**Loading & Bundle**
+
+- Mapbox GL loaded via `next/dynamic` with `ssr: false` and skeleton fallbacks to keep the initial bundle lean
+- Google Fonts optimized through `next/font` with `display: 'swap'` to eliminate render-blocking requests
+- Preconnect hints to Mapbox CDN domains for faster map tile loading
+
+**Rendering**
+
+- Extensive memoization (`useMemo`, `useCallback`, `React.memo`) across components and contexts to minimize unnecessary re-renders
+- Debounced inputs and map events at multiple levels (search, map panning, cluster updates, window resize)
+- `requestAnimationFrame`-batched cluster marker updates for smooth map interactions
+- Ref-based state tracking to avoid triggering renders for internal bookkeeping
+
+**Caching & Data**
+
+- ISR with static generation for popular networks via `generateStaticParams`, on-demand generation for the rest
+- React `cache()` for server-side request deduplication during rendering
+- Tiered revalidation: network list cached longer, station data refreshed more frequently
+
+**Map Performance**
+
+- Mapbox GL native clustering for both network and station markers, with zoom-based expansion
+- WebGL map instance reuse (`reuseMaps`) to avoid costly context re-creation on navigation
 
 ---
 
