@@ -4,7 +4,17 @@ Explore and discover bicycle sharing networks around the world. Find bike statio
 
 ![Node](https://img.shields.io/badge/node-20%2B-green) ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue) ![Next.js](https://img.shields.io/badge/Next.js-16-black) ![React](https://img.shields.io/badge/React-19-61DAFB) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38BDF8) ![Mapbox GL](https://img.shields.io/badge/Mapbox_GL-v3-000) [![CI](https://github.com/mitoperni/cyclemap/actions/workflows/ci.yml/badge.svg)](https://github.com/mitoperni/cyclemap/actions/workflows/ci.yml) [![Vercel](https://vercelbadge.vercel.app/api/mitoperni/cyclemap)](https://cyclemap-rho.vercel.app/)
 
-**[Live Demo](https://cyclemap-rho.vercel.app/)** | **[Design (Figma)](https://www.figma.com/proto/0MNqMneHvxahQZ6pknjzlq/Frontend-Challenge?page-id=1166%3A4310&node-id=5110-10913&viewport=4865%2C-2607%2C0.79&t=UlhDbVzZT1c5dezR-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=5110%3A10913)**
+<p align="center">
+  <b>
+    <a href="https://cyclemap-rho.vercel.app/">Live Demo</a> ·
+    <a href="https://www.figma.com/proto/0MNqMneHvxahQZ6pknjzlq/Frontend-Challenge?page-id=1166%3A4310&node-id=5110-10913&viewport=4865%2C-2607%2C0.79&t=UlhDbVzZT1c5dezR-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=5110%3A10913">
+      Design (Figma)
+    </a> ·
+    <a href="https://deepwiki.com/mitoperni/cyclemap/3.2-project-structure/">
+      Deep Wiki
+    </a>
+  </b>
+</p>
 
 ---
 
