@@ -10,7 +10,7 @@ import { UserLocationMarker } from './user-location-marker';
 import { MapError } from './map-error';
 import { useFitBounds } from '@/hooks/use-fit-bounds';
 import { useMapLanguage } from '@/hooks/use-map-language';
-import { useGeolocationContext } from '@/contexts';
+import { useGeolocationContext, useSidebarContext } from '@/contexts';
 import { MAP_CONFIG, MAPBOX_CONFIG, CLUSTER_CONFIG, GEOLOCATION_CONFIG } from '@/lib/constants';
 import type { Network } from '@/types';
 
@@ -29,10 +29,16 @@ export function MapboxMap({ networks }: MapboxMapProps) {
   const router = useRouter();
   const [mapError, setMapError] = useState<string | null>(null);
   const { position: userPosition } = useGeolocationContext();
+  const { hasMounted } = useSidebarContext();
   const hasAutoFlyRef = useRef(false);
 
   useFitBounds(mapRef, networks);
   useMapLanguage(mapInstance);
+
+  useEffect(() => {
+    if (!mapInstance || !hasMounted) return;
+    mapInstance.resize();
+  }, [mapInstance, hasMounted]);
 
   useEffect(() => {
     if (!mapInstance || !userPosition || hasAutoFlyRef.current) return;
