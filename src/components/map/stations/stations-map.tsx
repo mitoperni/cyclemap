@@ -10,6 +10,7 @@ import { UserLocationMarker } from '../user-location-marker';
 import { MapError } from '../map-error';
 import { NearMeButton } from '@/components/ui/near-me-button';
 import { useStationsSync } from '@/contexts/stations-sync-context';
+import { useSidebarContext } from '@/contexts/sidebar-context';
 import { useMapLanguage } from '@/hooks/use-map-language';
 import { MAP_CONFIG, MAPBOX_CONFIG, GEOLOCATION_CONFIG } from '@/lib/constants';
 import type { Station } from '@/types';
@@ -23,6 +24,7 @@ const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 export function StationsMap({ center }: StationsMapProps) {
   const { stations, registerMapRef, updateMapCenter, selectedStationId, clearSelection } =
     useStationsSync();
+  const { hasMounted } = useSidebarContext();
 
   const [mapInstance, setMapInstance] = useState<MapRef | null>(null);
   const [mapClickedStationId, setMapClickedStationId] = useState<string | null>(null);
@@ -71,6 +73,25 @@ export function StationsMap({ center }: StationsMapProps) {
       mapInstance.off('moveend', handleMoveEnd);
     };
   }, [mapInstance, updateMapCenter]);
+
+  useEffect(() => {
+    if (!mapInstance || !hasMounted) return;
+    mapInstance.resize();
+  }, [mapInstance, hasMounted]);
+
+  useEffect(() => {
+    if (!mapInstance || !selectedStationId) return;
+
+    const station = stationLookup.get(selectedStationId);
+    if (!station) return;
+
+    mapInstance.flyTo({
+      center: [station.longitude, station.latitude],
+      zoom: MAP_CONFIG.MAX_ZOOM - 2,
+      duration: MAP_CONFIG.ANIMATION_DURATION,
+      essential: true,
+    });
+  }, [mapInstance, selectedStationId, stationLookup]);
 
   const handleMapError = useCallback((e: ErrorEvent) => {
     const errorMessage = e.error?.message || '';

@@ -113,11 +113,13 @@ export function StationsSyncProvider({
   const flyToStation = useCallback(
     (stationId: string) => {
       const station = stationLookup.get(stationId);
-      const map = mapRefInternal.current;
 
-      if (!station || !map) return;
+      if (!station) return;
 
       setSelectedStationId(stationId);
+
+      const map = mapRefInternal.current;
+      if (!map) return;
 
       map.flyTo({
         center: [station.longitude, station.latitude],
