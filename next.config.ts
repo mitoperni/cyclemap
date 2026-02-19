@@ -31,15 +31,8 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              // unsafe-eval: Required by Mapbox GL JS - uses new Function() internally
-              // to compile style expressions (filters, conditional colors).
-              // Without it, the map fails to render. See: https://github.com/mapbox/mapbox-gl-js/issues/3773
-              // unsafe-inline: Required by Next.js for hydration bootstrap scripts
-              // and JSON-LD scripts using dangerouslySetInnerHTML.
-              // Alternative: nonce-based approach via middleware (adds complexity).
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://api.mapbox.com https://vercel.live",
-              // unsafe-inline: Required by Mapbox GL JS - injects inline styles
-              // to position map elements (markers, popups, controls).
+              // unsafe-inline: required by Next.js (hydration, JSON-LD) and Mapbox GL JS (inline styles)
+              "script-src 'self' 'unsafe-inline' https://api.mapbox.com https://vercel.live",
               "style-src 'self' 'unsafe-inline' https://api.mapbox.com https://vercel.live",
               "img-src 'self' data: blob: https://api.mapbox.com https://tiles.mapbox.com https://vercel.live https://vercel.com",
               "font-src 'self' https://vercel.live https://assets.vercel.com",
